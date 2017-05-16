@@ -1,0 +1,150 @@
+# This file is generated automatically by Poet
+# from the poetry.toml configuration file.
+#
+# This file should not be modified directly.
+
+[root]
+name = "echo"
+version = "0.1.0"
+
+
+[[package]]
+name = "coverage"
+version = "4.4.1"
+category = "dev"
+optional = false
+checksum = [
+    "sha256:7a9c44400ee0f3b4546066e0710e1250fd75831adc02ab99dda176ad8726f424",
+    "sha256:c820a533a943ebc860acc0ce6a00dd36e0fdf2c6f619ff8225755169428c5fa2"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "httpretty"
+version = "0.8.14"
+category = "dev"
+optional = false
+checksum = [
+    "sha256:83c176bbac9d68a45a5cca54f2d5be7e6b16a063adf6f334e7fd0eee272e976e"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "prompt-toolkit"
+version = "1.0.5"
+category = "main"
+optional = false
+checksum = [
+    "sha256:b726807349e8158a70773cf6ac2a90f0c62849dd02a339aac910ba1cd882f313",
+    "sha256:92b4432ce618a15396a97f1adbecfb92a3fec9c900f9b4ca4c5b20b293ef2f5f"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "py"
+version = "1.4.33"
+category = "dev"
+optional = false
+checksum = [
+    "sha256:1f9a981438f2acc20470b301a07a496375641f902320f70e31916fe3377385a9",
+    "sha256:81b5e37db3cc1052de438375605fb5d3b3e97f950f415f9143f04697c684d7eb"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "pygments"
+version = "2.2.0"
+category = "main"
+optional = false
+checksum = [
+    "sha256:dbae1046def0efb574852fab9e90209b23f556367b5a320c0bcb871c77c3e8cc",
+    "sha256:78f3f434bcc5d6ee09020f92ba487f95ba50f1e3ef83ae96b9d5ffa1bab25c5d"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "pyreadline"
+version = "2.1.0"
+category = "main"
+optional = false
+checksum = [
+    "sha256:4530592fc2e85b25b1a9f79664433da09237c1a270e4d78ea5aa3a2c7229e2d1"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "pytest"
+version = "3.0.7"
+category = "dev"
+optional = false
+checksum = [
+    "sha256:b70696ebd1a5e6b627e7e3ac1365a4bc60aaf3495e843c1e70448966c5224cab",
+    "sha256:66f332ae62593b874a648b10a8cb106bfdacd2c6288ed7dec3713c3a808a6017"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "pytest-cov"
+version = "2.5.1"
+category = "dev"
+optional = false
+checksum = [
+    "sha256:890fe5565400902b0c78b5357004aab1c814115894f4f21370e2433256a3eeec",
+    "sha256:03aa752cf11db41d281ea1d807d954c4eda35cfa1b21d6971966cc041bbf6e2d"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "six"
+version = "1.10.0"
+category = "main"
+optional = false
+checksum = [
+    "sha256:0ff78c403d9bccf5a425a6d31a12aa6b47f1c21ca4dc2573a7e2f32a97335eb1",
+    "sha256:105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "toml"
+version = "0.9.2"
+category = "main"
+optional = false
+checksum = [
+    "sha256:b3953bffe848ad9a6d554114d82f2dcb3e23945e90b4d9addc9956f37f336594"
+]
+python = [
+    "*"
+]
+
+[[package]]
+name = "wcwidth"
+version = "0.1.7"
+category = "main"
+optional = false
+checksum = [
+    "sha256:3df37372226d6e63e1b1e1eda15c594bca98a22d33a23832a90998faa96bc65e",
+    "sha256:f4ebe71925af7b40a864553f761ed559b43544f8f71746c2d756c7fe788ade7c"
+]
+python = [
+    "*"
+]
+
