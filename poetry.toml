@@ -1,0 +1,29 @@
+[package]
+name = "echo"
+version = "0.1.0"
+description = ""
+license="MPL 2.0"
+authors = [
+    "Steven Knight <steven@knight.cx>"
+]
+readme = 'README.rst'
+repository = "https://github.com/skk/echo"
+homepage = "https://github.com/skk/echo"
+keywords = []
+include = ['LICENSE']
+python = ["^3.6"]
+
+[dependencies]
+toml = "^0.9"
+prompt_toolkit="1.0.5"
+pygments="2.2.0"
+pyreadline="2.1"
+
+[dev-dependencies]
+pytest = "^3.0"
+pytest-cov = "^2.4"
+coverage = "4.4.1"
+httpretty = "^0.8.14"
+
+[scripts]
+eche = 'poet:eche.main'
