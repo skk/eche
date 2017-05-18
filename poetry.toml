@@ -24,6 +24,7 @@ pytest = "^3.0"
 pytest-cov = "^2.4"
 coverage = "4.4.1"
 httpretty = "^0.8.14"
+funcy = "1.7.5"
 
 [scripts]
 eche = 'poet:eche.main'
