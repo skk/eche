@@ -1,5 +1,18 @@
-class Symbol(str):
+from attr import attrs, attrib
+
+
+class EcheTypeBase(object):
     pass
+
+
+@attrs(frozen=True)
+class Symbol(EcheTypeBase):
+    value = attrib()
+
+
+@attrs(frozen=True)
+class String(EcheTypeBase):
+    value = attrib(convert=lambda v: f'"{v}"')
 
 
 # lists
@@ -28,26 +41,22 @@ class Boolean(object):
         self.val = val
 
     @classmethod
-    def is_true(cls, exp):
-        return isinstance(exp, cls) and bool(exp)
-
-    @classmethod
-    def is_false(cls, exp):
-        return isinstance(exp, cls) and not bool(exp)
+    def is_boolean(cls, exp):
+        return isinstance(exp, cls)
 
 
-class Nil(object):
-    def __init__(self, val):
-        self.val = val
+@attrs(frozen=True)
+class Nil(EcheTypeBase):
+    value = attrib()
 
     @classmethod
     def is_nil(cls, exp):
         return isinstance(exp, cls)
 
 
-class Atom(object):
-    def __init__(self, val):
-        self.val = val
+@attrs(frozen=True)
+class Atom(EcheTypeBase):
+    value = attrib()
 
     @classmethod
     def is_atom(cls, exp):

@@ -23,7 +23,7 @@ for filename, mod in tests.items():
                 mod.REP(line)
             except eche.reader.Blank:
                 continue
-            except SyntaxError as e:
+            except (SyntaxError, ValueError) as e:
                 print("".join(traceback.format_exception(*sys.exc_info())))
                 continue
             except IOError as e:
