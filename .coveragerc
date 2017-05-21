@@ -1,0 +1,3 @@
+[run]
+omit = eche/runtests.py, eche/tests/*.py
+branch=True
