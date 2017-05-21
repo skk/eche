@@ -10,7 +10,6 @@ import eche.reader
 
 tests_dir = pathlib.Path('eche').joinpath('tests')
 tests = {
-    'step0_repl.mal': step0_repl,
     'step1_read_print.mal': step1_read_print
 }
 
