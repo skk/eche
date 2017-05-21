@@ -1,6 +1,6 @@
 import re
 
-from eche_types import Symbol, List
+from eche.eche_types import Symbol, List, String
 
 
 class Blank(Exception):
@@ -29,12 +29,15 @@ def read_str(data):
     # print(f"read-str tokens {tokens}")
     if len(tokens) == 0:
         raise Blank("Blank Line")
-    return read_form(Reader(tokens))
+    reader = Reader(tokens)
+    forms = read_form(reader)
+    return forms
 
 
 def tokenize(data):
-    token_re = re.compile(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@, ;]+)""")
-    return [t for t in re.findall(token_re, data) if t[0] != ';']
+    tre = re.compile(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""")
+    tokens = [t for t in re.findall(tre, data) if t[0] != ';']
+    return tokens
 
 
 def read_form(reader):
@@ -68,10 +71,20 @@ def read_sequence(reader, typ=list, start='(', end=')'):
     while token != end:
         if not token:
             raise SyntaxError(f"expected '{end}', got EOF")
-        ast.append(read_form(reader))
+
+        try:
+            val = read_form(reader)
+        except SyntaxError as e:
+            print(e)
+        else:
+            ast.append(val)
         token = reader.peek()
     reader.next()
     return ast
+
+
+def _unescape(s):
+    return s.replace('\\"', '"').replace('\\n', '\n').replace('\\\\', '\\')
 
 
 def read_atom(reader):
@@ -87,6 +100,11 @@ def read_atom(reader):
     elif re.match(float_re, token):
         # print(f"float atom {token}")
         atom = float(token)
+    elif token[0] == '"':
+        if token[-1] == '"':
+            return String(token[1:-1])
+        else:
+            raise ValueError("expected '\"', got EOF")
     elif token == 'nil':
         # print(f"nil atom {token}")
         atom = None
