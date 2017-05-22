@@ -1,6 +1,6 @@
 import pytest
 
-from eche_types import Symbol, Atom, Nil, Boolean
+from eche_types import Symbol, Atom, Nil, Boolean, List
 
 
 @pytest.mark.parametrize("test_input", ['sym1'])
@@ -53,14 +53,43 @@ def test_nil_is_nil(test_input):
     assert Nil.is_nil(nil)
 
 
-@pytest.mark.parametrize("test_input", [True, False])
-def test_boolean_is_boolean(test_input):
-    """
-    Test Boolean class.
+class TestListType(object):
 
-    Args:
-        test_input
+    def test_is_list(self):
+        """
+        Test if is_list.
+        
+        Args:
+            self:
+           
+        Returns:
+            
+        """
+        assert List.is_list(List())
 
-    """
-    boolean = Boolean(test_input)
-    assert Boolean.is_boolean(boolean)
+
+class TestBooleanType(object):
+
+    @pytest.mark.parametrize("test_input", [True, False])
+    def test_boolean(self, test_input):
+        """
+        Test Boolean class.
+
+        Args:
+            self:
+            test_input
+
+        """
+        assert isinstance(Boolean(test_input), Boolean)
+
+    @pytest.mark.parametrize("test_input", [True, False])
+    def test_is_boolean(self, test_input):
+        """
+        Test Boolean class.
+
+        Args:
+            self:
+            test_input:
+
+        """
+        assert Boolean.is_boolean(Boolean(test_input))

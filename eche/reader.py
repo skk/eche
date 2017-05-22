@@ -1,6 +1,6 @@
 import re
 
-from eche.eche_types import Symbol, List, String
+from eche.eche_types import Symbol, List, String, Boolean, Nil
 
 
 class Blank(Exception):
@@ -107,13 +107,13 @@ def read_atom(reader):
             raise ValueError("expected '\"', got EOF")
     elif token == 'nil':
         # print(f"nil atom {token}")
-        atom = None
+        atom = Nil(None)
     elif token == 'false':
         # print(f"false atom {token}")
-        atom = False
+        atom = Boolean(False)
     elif token == 'true':
         # print(f"true atom {token}")
-        atom = True
+        atom = Boolean(True)
     else:
         # print(f"symbol atom {token}")
         atom = Symbol(token)
