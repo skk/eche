@@ -1,35 +1,45 @@
 import pytest
 
-import eche.eche_types
+from eche.reader import read_str
+from eche.printer import print_str
 
 
-@pytest.mark.parametrize("test_input,expected_cls", [
-    ('1', eche.eche_types.Atom),
-    ('-1', eche.eche_types.Atom),
+@pytest.mark.parametrize("test_input", [
+    '1',
+    '-1',
 ])
-def test_read_atom(test_input, expected_cls):
-    assert expected_cls(test_input) == test_input
+def test_read_atom(test_input):
+    assert print_str(read_str(test_input)) == test_input
 
 
-@pytest.mark.parametrize("test_input,expected_cls", [
-    ('nil', eche.eche_types.Nil),
+@pytest.mark.parametrize("test_input", [
+    'nil',
 ])
-def test_nil(test_input, expected_cls):
-    assert expected_cls(test_input) == test_input
+def test_nil(test_input):
+    assert print_str(read_str(test_input)) == test_input
 
 
-@pytest.mark.parametrize("test_input,expected_cls", [
-    ('true', eche.eche_types.Boolean),
-    ('false', eche.eche_types.Boolean),
+@pytest.mark.parametrize("test_input", [
+    'true',
+    'false',
 ])
-def test_nil(test_input, expected_cls):
-    assert expected_cls(test_input) == test_input
+def test_nil(test_input):
+    assert print_str(read_str(test_input)) == test_input
 
 
-@pytest.mark.parametrize("test_input,expected_cls", [
-    ('\"abc\"', eche.eche_types.String),
-    ('\"abc (with parents)\"', eche.eche_types.String),
-    ('\"abc \"def\"', eche.eche_types.String),
+@pytest.mark.parametrize("test_input", [
+    '*',
+    'abc',
+    'abc5',
+    'abc-def',
 ])
-def test_eche_type_string(test_input, expected_cls):
-    assert expected_cls(test_input) == test_input
+def test_eche_type_symbol(test_input):
+    assert print_str(read_str(test_input)) == test_input
+
+
+@pytest.mark.parametrize("test_input", [
+    '()',
+    '(* 1 2)',
+])
+def test_eche_type_list(test_input):
+    assert print_str(read_str(test_input)) == test_input
