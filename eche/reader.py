@@ -1,10 +1,14 @@
 import re
 
-from eche.eche_types import Symbol, List, String, Boolean, Nil
+from eche.eche_types import Symbol, List, String, Boolean, Nil, Integer, Float
 
 
 class Blank(Exception):
     pass
+
+
+int_re = re.compile(r"-?[0-9]+")
+float_re = re.compile(r"-?[0-9][0-9.]*")
 
 
 class Reader(object):
@@ -58,10 +62,11 @@ def read_form(reader):
 
 
 def read_list(reader):
-    return read_sequence(reader, List, '(', ')')
+    a = read_sequence(reader, List, '(', ')')
+    return a
 
 
-def read_sequence(reader, typ=list, start='(', end=')'):
+def read_sequence(reader, typ=List, start='(', end=')'):
     ast = typ()
     token = reader.next()
     if token != start:
@@ -88,18 +93,16 @@ def _unescape(s):
 
 
 def read_atom(reader):
-    int_re = re.compile(r"-?[0-9]+$")
-    float_re = re.compile(r"-?[0-9][0-9.]*$")
     token = reader.next()
 
     # print(f"read_atom token {token}")
 
     if re.match(int_re, token):
         # print(f"int atom {token}")
-        atom = int(token)
+        atom = Integer(token)
     elif re.match(float_re, token):
         # print(f"float atom {token}")
-        atom = float(token)
+        atom = Float(token)
     elif token[0] == '"':
         if token[-1] == '"':
             return String(token[1:-1])

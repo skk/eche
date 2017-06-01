@@ -1,23 +1,20 @@
 import pytest
 
 from eche.reader import read_str
-import eche.eche_types
+from eche.printer import print_str
 
 
-@pytest.mark.parametrize("test_input,expected_cls", [
-    ('abcABC123', eche.eche_types.Symbol),
+@pytest.mark.parametrize("test_input", [
+    'abcABC123',
 ])
-def test_parsing_symbol(test_input, expected_cls):
-    val = read_str(test_input)
-    assert expected_cls(test_input) == val
+def test_parsing_symbol(test_input):
+    assert print_str(read_str(test_input)) == test_input
 
 
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("test_input,expected_cls", [
-    ('\"this is a test.\"', eche.eche_types.String),
-    ('\"abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789{}[]()<>!@#$%^Y.\"',
-     eche.eche_types.String)
+@pytest.mark.parametrize("test_input", [
+    '\"this is a test.\"',
+    '\"abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789{}[]()<>!@#$%^Y.\"',
 ])
-def test_str_parsing(test_input, expected_cls):
-    val = read_str(test_input)
-    assert expected_cls(test_input) == val
+def test_str_parsing(test_input):
+    assert print_str(read_str(test_input)) == test_input
