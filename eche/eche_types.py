@@ -49,7 +49,7 @@ class String(EcheTypeBase):
 
 @attrs(frozen=True, cmp=False)
 class List(EcheTypeBase, MutableSequence):
-    value = attrib(default=list())
+    value = attrib(default=None)
 
     def __getitem__(self, index) -> str:
         return self.value.__getitem__(index)
@@ -97,6 +97,9 @@ class Boolean(EcheTypeBase):
 @attrs(frozen=True, cmp=False)
 class Nil(EcheTypeBase):
     value = attrib()
+
+    def __str__(self) -> str:
+        return 'nil'
 
 
 @attrs(frozen=True, cmp=False)
