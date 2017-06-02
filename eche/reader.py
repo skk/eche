@@ -1,6 +1,7 @@
 import re
+import typing
 
-from eche.eche_types import Symbol, List, String, Boolean, Nil, Integer, Float
+from eche.eche_types import Symbol, List, String, Boolean, Nil, Integer, Float, EcheTypeBase
 
 
 class Blank(Exception):
@@ -12,22 +13,22 @@ float_re = re.compile(r"-?[0-9][0-9.]*")
 
 
 class Reader(object):
-    def __init__(self, tokens, position=0):
+    def __init__(self, tokens: typing.List[str], position: int=0) -> None:
         self.tokens = tokens
         self.position = position
 
-    def next(self):
+    def next(self) -> typing.Any:
         self.position += 1
         return self.tokens[self.position - 1]
 
-    def peek(self):
+    def peek(self) -> typing.Union[str, None]:
         if len(self.tokens) > self.position:
             return self.tokens[self.position]
         else:
             return None
 
 
-def read_str(data):
+def read_str(data: str) -> typing.List[typing.Any]:
     # print(f"read-str data {data}")
     tokens = tokenize(data)
     # print(f"read-str tokens {tokens}")
@@ -38,13 +39,13 @@ def read_str(data):
     return forms
 
 
-def tokenize(data):
+def tokenize(data: str) -> typing.List[str]:
     tre = re.compile(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""")
     tokens = [t for t in re.findall(tre, data) if t[0] != ';']
     return tokens
 
 
-def read_form(reader):
+def read_form(reader: Reader) -> typing.Union[None, typing.List[typing.Any], EcheTypeBase]:
     token = reader.peek()
     # print(f"read_form token {token}")
 
@@ -61,13 +62,13 @@ def read_form(reader):
         return read_atom(reader)
 
 
-def read_list(reader):
-    a = read_sequence(reader, List, '(', ')')
+def read_list(reader: Reader) -> List:
+    a = read_sequence(reader, '(', ')')
     return a
 
 
-def read_sequence(reader, typ=List, start='(', end=')'):
-    ast = typ()
+def read_sequence(reader: Reader, start='(', end=')') -> typing.List[typing.Any]:
+    ast = List()
     token = reader.next()
     if token != start:
         raise SyntaxError(f"expected '{start}'")
@@ -88,11 +89,11 @@ def read_sequence(reader, typ=List, start='(', end=')'):
     return ast
 
 
-def _unescape(s):
+def _unescape(s: str) -> str:
     return s.replace('\\"', '"').replace('\\n', '\n').replace('\\\\', '\\')
 
 
-def read_atom(reader):
+def read_atom(reader: Reader) -> EcheTypeBase:
     token = reader.next()
 
     # print(f"read_atom token {token}")

@@ -16,8 +16,7 @@ else:
 args.append('--tb=native')
 sys.argv.extend(args)
 
-args = ' '.join(sys.argv)
-print(f"sys argv {args}")
+print(f"sys argv {' '.join(sys.argv)}")
 
 if __name__ == '__main__':
     sys.exit(pytest.main())

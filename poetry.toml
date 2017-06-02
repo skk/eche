@@ -26,6 +26,7 @@ coverage = "4.4.1"
 httpretty = "^0.8.14"
 funcy = "1.7.5"
 attr = "17.1.0"
+mypy = "^0.5"
 
 [scripts]
 eche = 'poet:eche.main'
