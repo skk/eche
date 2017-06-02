@@ -29,6 +29,7 @@ def test_eche_type_symbol(test_input):
 
 
 @pytest.mark.parametrize("test_input", [
+    '((9 8))',
     '()',
     '(* 1 2)',
     '(+ (* 1 5) (/ 1 0))'
