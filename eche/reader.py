@@ -63,12 +63,11 @@ def read_form(reader: Reader) -> typing.Union[None, typing.List[typing.Any], Ech
 
 
 def read_list(reader: Reader) -> List:
-    a = read_sequence(reader, '(', ')')
-    return a
+    return read_sequence(reader, '(', ')')
 
 
 def read_sequence(reader: Reader, start='(', end=')') -> typing.List[typing.Any]:
-    ast = List()
+    ast = List(list())
     token = reader.next()
     if token != start:
         raise SyntaxError(f"expected '{start}'")
@@ -85,6 +84,7 @@ def read_sequence(reader: Reader, start='(', end=')') -> typing.List[typing.Any]
         else:
             ast.append(val)
         token = reader.peek()
+
     reader.next()
     return ast
 
