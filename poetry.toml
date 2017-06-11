@@ -15,18 +15,18 @@ python = ["^3.6"]
 
 [dependencies]
 toml = "^0.9"
-prompt_toolkit="1.0.5"
-pygments="2.2.0"
-pyreadline="2.1"
+prompt_toolkit = "1.0.5"
+pygments = "2.2.0"
+pyreadline = "2.1"
+attrs = "^17.2.0"
+funcy = "^1.7.5"
+mypy = "^0.511"
 
 [dev-dependencies]
 pytest = "^3.0"
 pytest-cov = "^2.4"
 coverage = "4.4.1"
 httpretty = "^0.8.14"
-funcy = "1.7.5"
-attr = "17.1.0"
-mypy = "^0.5"
 
 [scripts]
 eche = 'poet:eche.main'

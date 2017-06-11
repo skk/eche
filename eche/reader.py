@@ -1,7 +1,10 @@
 import re
 import typing
 
-from eche.eche_types import Symbol, List, String, Boolean, Nil, Integer, Float, EcheTypeBase
+from funcy.seqs import chunks
+
+from eche.eche_types import Symbol, String, Boolean, Nil, Integer, Float, EcheTypeBase, Dict, \
+    Vector, List
 
 
 class Blank(Exception):
@@ -13,7 +16,7 @@ float_re = re.compile(r"-?[0-9][0-9.]*")
 
 
 class Reader(object):
-    def __init__(self, tokens: typing.List[str], position: int=0) -> None:
+    def __init__(self, tokens: typing.List[str], position: int=0):
         self.tokens = tokens
         self.position = position
 
@@ -40,7 +43,8 @@ def read_str(data: str) -> typing.List[typing.Any]:
 
 
 def tokenize(data: str) -> typing.List[str]:
-    tre = re.compile(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""")
+    tre = re.compile(
+        r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""")
     tokens = [t for t in re.findall(tre, data) if t[0] != ';']
     return tokens
 
@@ -52,22 +56,51 @@ def read_form(reader: Reader) -> typing.Union[None, typing.List[typing.Any], Ech
     if token[0] == ';':
         reader.next()
         return None
+    # vector
+    elif token == Vector.suffix_char:
+        raise SyntaxError(f"unexpected '{Vector.suffix_char}'")
+    elif token == Vector.prefix_char:
+        return read_vector(reader)
+    # dict
+    elif token == Dict.suffix_char:
+        raise SyntaxError(f"unexpected '{Dict.suffix_char}'")
+    elif token == Dict.prefix_char:
+        return read_dict(reader)
     # list
-    elif token == ')':
-        raise SyntaxError("unexpected ')'")
-    elif token == '(':
+    elif token == List.suffix_char:
+        raise SyntaxError(f"unexpected '{List.suffix_char}'")
+    elif token == List.prefix_char:
         return read_list(reader)
     # atom
     else:
         return read_atom(reader)
 
 
-def read_list(reader: Reader) -> List:
-    return read_sequence(reader, '(', ')')
+def read_vector(reader: Reader) -> Vector:
+    vec = Vector()
+    for val in read_sequence(reader, Vector.prefix_char, Vector.suffix_char):
+        vec.append(val)
+
+    return vec
 
 
-def read_sequence(reader: Reader, start='(', end=')') -> typing.List[typing.Any]:
-    ast = List(list())
+def read_list(reader: Reader) -> Vector:
+    vec = List()
+    for val in read_sequence(reader, List.prefix_char, List.suffix_char):
+        vec.append(val)
+
+    return vec
+
+
+def read_dict(reader: Reader) -> Dict:
+    d = Dict()
+    for key, val in chunks(2, read_sequence(reader, Dict.prefix_char, Dict.suffix_char)):
+        d[key] = val
+
+    return d
+
+
+def read_sequence(reader: Reader, start: str, end: str) -> typing.List[typing.Any]:
     token = reader.next()
     if token != start:
         raise SyntaxError(f"expected '{start}'")
@@ -82,11 +115,10 @@ def read_sequence(reader: Reader, start='(', end=')') -> typing.List[typing.Any]
         except SyntaxError as e:
             print(e)
         else:
-            ast.append(val)
+            yield val
         token = reader.peek()
 
     reader.next()
-    return ast
 
 
 def _unescape(s: str) -> str:
@@ -99,10 +131,8 @@ def read_atom(reader: Reader) -> EcheTypeBase:
     # print(f"read_atom token {token}")
 
     if re.match(int_re, token):
-        # print(f"int atom {token}")
         atom = Integer(token)
     elif re.match(float_re, token):
-        # print(f"float atom {token}")
         atom = Float(token)
     elif token[0] == '"':
         if token[-1] == '"':
@@ -110,17 +140,12 @@ def read_atom(reader: Reader) -> EcheTypeBase:
         else:
             raise ValueError("expected '\"', got EOF")
     elif token == 'nil':
-        # print(f"nil atom {token}")
         atom = Nil(None)
     elif token == 'false':
-        # print(f"false atom {token}")
         atom = Boolean(False)
     elif token == 'true':
-        # print(f"true atom {token}")
         atom = Boolean(True)
     else:
-        # print(f"symbol atom {token}")
         atom = Symbol(token)
 
-    # print(f"token {token} atom {atom}")
     return atom
