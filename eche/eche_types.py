@@ -1,12 +1,14 @@
 import typing
+from abc import ABCMeta
 
 from attr import attrs, attrib
-from collections.abc import MutableSequence
+from collections import OrderedDict
+
 
 from eche.printer import print_str
 
 
-class EcheTypeBase(object):
+class EcheTypeBase(object, metaclass=ABCMeta):
     value = None
 
     def __init__(self, value) -> None:
@@ -22,6 +24,9 @@ class EcheTypeBase(object):
     def __str__(self) -> str:
         return str(self.value)
 
+EcheTypeBase.register(list)
+EcheTypeBase.register(dict)
+
 
 @attrs(frozen=True, cmp=False)
 class Symbol(EcheTypeBase):
@@ -32,6 +37,9 @@ class Symbol(EcheTypeBase):
 @attrs(frozen=True, cmp=False)
 class String(EcheTypeBase):
     value = attrib()
+
+    def __hash__(self) -> int:
+        return self.value.__hash__()
 
     def __str__(self) -> str:
         return f'"{self.value}"'
@@ -47,43 +55,42 @@ class String(EcheTypeBase):
         return self.value == other
 
 
-@attrs(frozen=True, cmp=False)
-class List(EcheTypeBase, MutableSequence):
-    value = attrib(default=None)
-
-    def __getitem__(self, index) -> str:
-        return self.value.__getitem__(index)
-
-    def __setitem__(self, index: object, value: typing.Any) -> None:
-        self.value.__setitem__(index, value)
-
-    def __len__(self) -> int:
-        return len(self.value)
-
-    def __delitem__(self, index: object) -> None:
-        self.value.__detitem__(index)
-
-    def pop(self, index=-1):
-        return self.value.pop(index)
-
-    def clear(self) -> None:
-        self.value.clear()
-
-    def reverse(self) -> None:
-        self.value.reverse()
-
-    def remove(self, value: typing.Any) -> None:
-        self.value.remove(value)
-
-    def insert(self, index: int, value: typing.Any) -> None:
-        self.value.insert(index, value)
+class Dict(OrderedDict, EcheTypeBase):
+    prefix_char = '{'
+    suffix_char = '}'
 
     def __str__(self) -> str:
-        val = " ".join(map(lambda e: print_str(e), self.value))
-        return f"({val})"
+        buf = []
+        for key in self.keys():
+            val = self[key]
+            buf.append(f"{key} {val}")
 
-    def append(self, rhs: typing.Any) -> None:
-        self.value.append(rhs)
+        buf = ' '.join(buf)
+        buf = self.prefix_char + f'{buf}' + self.suffix_char
+
+        return buf
+
+
+class Vector(list, EcheTypeBase):
+    prefix_char = '['
+    suffix_char = ']'
+
+    def __str__(self) -> str:
+        if len(self) == 0:
+            val = self.prefix_char + self.suffix_char
+        else:
+            val = self.prefix_char + ' '.join([str(e) for e in self]) + self.suffix_char
+        return val
+
+
+@attrs(frozen=True, cmp=False)
+class List(list, EcheTypeBase):
+    prefix_char = '('
+    suffix_char = ')'
+
+    def __str__(self) -> str:
+        val = " ".join(map(lambda e: print_str(e), self))
+        return self.prefix_char + f"{val}" + self.suffix_char
 
 
 @attrs(frozen=True, cmp=False)
