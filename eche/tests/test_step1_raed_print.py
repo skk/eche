@@ -1,6 +1,6 @@
 import pytest
 
-from eche.reader import read_str
+from eche.reader import read_str, Blank
 from eche.printer import print_str
 
 import math
@@ -84,6 +84,26 @@ def test_vector(test_input):
     '{"abc" 1}',
 ])
 def test_dicts(test_input):
-    a = read_str(test_input)
-    b = test_input
-    assert print_str(a) == b
+    actual = print_str(read_str(test_input))
+    excepted = test_input
+    assert actual == excepted
+
+
+@pytest.mark.parametrize("test_input", [
+    '; this is a comment!',
+])
+def test_comments_blank(test_input):
+    with pytest.raises(Blank):
+        read_str(test_input)
+
+
+@pytest.mark.parametrize("test_input,expected", [
+    ('(1 2) ; another comment!', '(1 2)')
+])
+def test_comments(test_input, expected):
+    actual = print_str(read_str(test_input))
+    return actual == expected
+
+# TODO - add tests for:
+# * read of ^/metadata
+# * read of @/deref
