@@ -38,3 +38,6 @@ jspm_packages
 /.idea/
 
 .mypy_cache/
+
+*.pyc
+*.mal
