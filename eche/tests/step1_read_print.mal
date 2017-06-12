@@ -150,6 +150,7 @@ false
 ;=>(with-meta [1 2 3] {"a" 1})
 
 
+;; Testing read of ^/metadata
 ;; Testing read of @/deref
 @a
 ;=>(deref a)
