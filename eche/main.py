@@ -2,8 +2,8 @@
 
 import sys
 
-import step1_read_print as step
+import step1_read_print as step1
 
-sys.exit(step.repl())
+sys.exit(step1.repl())
 
 
