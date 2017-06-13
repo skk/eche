@@ -96,40 +96,11 @@ class Node(object):
     def __str__(self):
         return str(self.data)
 
-    # def __str__(self):
-    #     if self.rest is None:
-    #         return self.stringify_pointers()
-    #     else:
-    #         return f"{self.stringify_pointers()}-->{self.rest}"
-    #
-    # def stringify_pointers(self):
-    #     s = '['
-    #     if self.rest:
-    #         s += str(self.rest) + (',' if self.data else '')
-    #     if self.data:
-    #         # <> to distinguish rand from rest
-    #         s += f'<{self.data}>'
-    #     return s + ']'
-
 
 @attrs(frozen=False, cmp=False)
 class List(MutableSequence, EcheTypeBase):
-    def __contains__(self, value):
-        return super().__contains__(value)
-
     head = attrib(default=None)
     length = attrib(default=0)
-
-    def __str__(self) -> str:
-        values = [val for val in self]
-        val = self.format_collection(self.prefix_char, reversed(values), self.suffix_char)
-        return val
-
-    def __iter__(self):
-        node = self.head
-        while node:
-            yield str(node)
-            node = node.rest
 
     # TODO: delete at beginning
 
@@ -176,10 +147,32 @@ class List(MutableSequence, EcheTypeBase):
         pass
 
     def __getitem__(self, index):
-        pass
+        for val, idx in enumerate(self):
+            if idx == index:
+                return val
+
+        raise IndexError
 
     def __setitem__(self, index, value):
         pass
+
+    def __str__(self) -> str:
+        values = [val for val in self]
+        val = self.format_collection(self.prefix_char, reversed(values), self.suffix_char)
+        return val
+
+    def __iter__(self):
+        node = self.head
+        while node:
+            yield str(node)
+            node = node.rest
+
+    def __contains__(self, value):
+        for val in self:
+            if val == value:
+                return True
+
+        return False
 
     prefix_char = '('
     suffix_char = ')'
