@@ -21,6 +21,7 @@ pyreadline = "2.1"
 attrs = "^17.2.0"
 funcy = "^1.7.5"
 mypy = "^0.511"
+pprintpp = "^0.3.0"
 
 [dev-dependencies]
 pytest = "^3.0"
