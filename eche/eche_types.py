@@ -1,11 +1,8 @@
 import typing
 from abc import ABCMeta
+from collections import OrderedDict, MutableSequence
 
 from attr import attrs, attrib
-from collections import OrderedDict
-
-
-from eche.printer import print_str
 
 
 class EcheTypeBase(object, metaclass=ABCMeta):
@@ -23,6 +20,11 @@ class EcheTypeBase(object, metaclass=ABCMeta):
 
     def __str__(self) -> str:
         return str(self.value)
+
+    def format_collection(self, prefix_char, collection, suffix_char, sep=' '):
+        val = prefix_char + sep.join([str(e) for e in collection]) + suffix_char
+        return val
+
 
 EcheTypeBase.register(list)
 EcheTypeBase.register(dict)
@@ -60,15 +62,13 @@ class Dict(OrderedDict, EcheTypeBase):
     suffix_char = '}'
 
     def __str__(self) -> str:
-        buf = []
+        values = []
         for key in self.keys():
             val = self[key]
-            buf.append(f"{key} {val}")
+            values.append(f"{key} {val}")
 
-        buf = ' '.join(buf)
-        buf = self.prefix_char + f'{buf}' + self.suffix_char
-
-        return buf
+        val = self.format_collection(self.prefix_char, values, self.suffix_char)
+        return val
 
 
 class Vector(list, EcheTypeBase):
@@ -79,18 +79,110 @@ class Vector(list, EcheTypeBase):
         if len(self) == 0:
             val = self.prefix_char + self.suffix_char
         else:
-            val = self.prefix_char + ' '.join([str(e) for e in self]) + self.suffix_char
+            val = self.format_collection(self.prefix_char, self, self.suffix_char)
         return val
 
 
-@attrs(frozen=True, cmp=False)
-class List(list, EcheTypeBase):
-    prefix_char = '('
-    suffix_char = ')'
+@attrs(frozen=False, cmp=False)
+class Node(object):
+    rest = attrib(default=None)
+    data = attrib(default=None)
+
+    @data.validator
+    def check(self, attribute, value):
+        if attribute == 'data' and isinstance(value, List):
+            raise TypeError("data attrib can't be List")
+
+    def __str__(self):
+        return str(self.data)
+
+    # def __str__(self):
+    #     if self.rest is None:
+    #         return self.stringify_pointers()
+    #     else:
+    #         return f"{self.stringify_pointers()}-->{self.rest}"
+    #
+    # def stringify_pointers(self):
+    #     s = '['
+    #     if self.rest:
+    #         s += str(self.rest) + (',' if self.data else '')
+    #     if self.data:
+    #         # <> to distinguish rand from rest
+    #         s += f'<{self.data}>'
+    #     return s + ']'
+
+
+@attrs(frozen=False, cmp=False)
+class List(MutableSequence, EcheTypeBase):
+    def __contains__(self, value):
+        return super().__contains__(value)
+
+    head = attrib(default=None)
+    length = attrib(default=0)
 
     def __str__(self) -> str:
-        val = " ".join(map(lambda e: print_str(e), self))
-        return self.prefix_char + f"{val}" + self.suffix_char
+        values = [val for val in self]
+        val = self.format_collection(self.prefix_char, reversed(values), self.suffix_char)
+        return val
+
+    def __iter__(self):
+        node = self.head
+        while node:
+            yield str(node)
+            node = node.rest
+
+    # TODO: delete at beginning
+
+    # insert at beginning
+    def push(self, new_data) -> None:
+        self.length += 1
+        new_node = Node(data=new_data, rest=self.head)
+        self.head = new_node
+
+    # TODO: delete at middle
+    # insert at middle
+    def insert_after(self, prev_node, new_data) -> None:
+
+        if prev_node is None:
+            raise ValueError("prev_node is None")
+
+        self.length += 1
+        prev_node.rest = Node(data=new_data, rest=prev_node)
+
+    # TODO: insert at end
+    # delete at end
+    def append(self, new_data) -> None:
+
+        new_node = Node(data=new_data)
+
+        if self.head is None:
+            self.head = new_node
+            self.length += 1
+            return
+
+        last = self.head
+        while last.rest:
+            last = last.rest
+
+        last.rest = new_node
+
+    def __len__(self) -> int:
+        return self.length
+
+    def __delitem__(self, index):
+        pass
+
+    def insert(self, index, value):
+        pass
+
+    def __getitem__(self, index):
+        pass
+
+    def __setitem__(self, index, value):
+        pass
+
+    prefix_char = '('
+    suffix_char = ')'
 
 
 @attrs(frozen=True, cmp=False)
