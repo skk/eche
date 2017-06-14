@@ -29,14 +29,14 @@ def test_eche_type_symbol(test_input):
 
 
 @pytest.mark.parametrize("test_input", [
-    '((9 8))',
+    '(9 8)',
     '()',
     '(* 1 2)',
     '(+ (* 1 5) (/ 1 0))'
 ])
 def test_eche_type_list(test_input):
-    a = read_str(test_input)
-    assert print_str(a) == test_input
+    actual = read_str(test_input)
+    assert print_str(actual) == test_input
 
 
 @pytest.mark.parametrize("test_input", [
@@ -76,8 +76,7 @@ def test_keywords(test_input):
 ])
 def test_vector(test_input):
     actual = print_str(read_str(test_input))
-    excepted = test_input
-    assert actual == excepted
+    assert actual == test_input
 
 
 @pytest.mark.parametrize("test_input", [
@@ -85,8 +84,7 @@ def test_vector(test_input):
 ])
 def test_dicts(test_input):
     actual = print_str(read_str(test_input))
-    excepted = test_input
-    assert actual == excepted
+    assert actual == test_input
 
 
 @pytest.mark.parametrize("test_input", [
