@@ -1,8 +1,9 @@
 import traceback
 import sys
 
-from eche.eche_readline import getline
+import pprintpp
 
+from eche.eche_readline import getline
 from eche.reader import read_str, Blank
 from eche.printer import print_str
 
@@ -14,6 +15,7 @@ def READ(data):
 
 # noinspection PyPep8Naming
 def EVAL(ast, _):
+    pprintpp.pprint(ast)
     return ast
 
 

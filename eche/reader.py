@@ -84,12 +84,12 @@ def read_vector(reader: Reader) -> Vector:
     return vec
 
 
-def read_list(reader: Reader) -> Vector:
-    vec = List()
+def read_list(reader: Reader) -> List:
+    llist = List()
     for val in read_sequence(reader, List.prefix_char, List.suffix_char):
-        vec.append(val)
+        llist.push(val)
 
-    return vec
+    return llist
 
 
 def read_dict(reader: Reader) -> Dict:
@@ -116,7 +116,8 @@ def read_sequence(reader: Reader, start: str, end: str) -> typing.List[typing.An
             print(e)
         else:
             yield val
-        token = reader.peek()
+        finally:
+            token = reader.peek()
 
     reader.next()
 
