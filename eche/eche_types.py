@@ -86,10 +86,17 @@ class Vector(list, EcheTypeBase):
         return val
 
 
+def node_data_convert(val):
+    if isinstance(val, Node):
+        return val.data
+    else:
+        return val
+
+
 @attrs(frozen=False, cmp=False)
 class Node(object):
     rest = attrib(default=None)
-    data = attrib(default=None)
+    data = attrib(default=None, convert=node_data_convert)
 
     @data.validator
     def check(self, attribute, value):
@@ -124,12 +131,11 @@ class List(MutableSequence, EcheTypeBase):
         prev_node.rest = Node(data=new_data, rest=prev_node)
 
     # insert at beginning
-    def prepend(self, new_data) -> None:
-
-        new_node = Node(data=new_data)
+    def prepend(self, new_data: typing.Union[Node, EcheTypeBase]) -> None:
+        node = node_data_convert(new_data)
 
         if self.head is None:
-            self.head = new_node
+            self.head = node
             self.length += 1
             return
 
@@ -137,7 +143,7 @@ class List(MutableSequence, EcheTypeBase):
         while last.rest:
             last = last.rest
 
-        last.rest = new_node
+        last.rest = node
 
     def __len__(self) -> int:
         return self.length
