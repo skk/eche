@@ -34,6 +34,9 @@ EcheTypeBase.register(dict)
 class Symbol(EcheTypeBase):
     value = attrib()
 
+    def __hash__(self) -> int:
+        return hash(self.value)
+
 
 # noinspection PyUnresolvedReferences
 @attrs(frozen=True, cmp=False)
@@ -103,14 +106,14 @@ class List(MutableSequence, EcheTypeBase):
     length = attrib(default=0)
 
     # TODO: delete at beginning
+    # TODO: delete at middle
 
-    # insert at beginning
-    def push(self, new_data) -> None:
+    # insert at end
+    def append(self, new_data) -> None:
         self.length += 1
         new_node = Node(data=new_data, rest=self.head)
         self.head = new_node
 
-    # TODO: delete at middle
     # insert at middle
     def insert_after(self, prev_node, new_data) -> None:
 
@@ -120,9 +123,8 @@ class List(MutableSequence, EcheTypeBase):
         self.length += 1
         prev_node.rest = Node(data=new_data, rest=prev_node)
 
-    # TODO: insert at end
-    # delete at end
-    def append(self, new_data) -> None:
+    # insert at beginning
+    def prepend(self, new_data) -> None:
 
         new_node = Node(data=new_data)
 
@@ -147,24 +149,36 @@ class List(MutableSequence, EcheTypeBase):
         pass
 
     def __getitem__(self, index):
-        for val, idx in enumerate(self):
-            if idx == index:
-                return val
+        vals = []
+        for idx, node in enumerate(self):
+            if isinstance(index, slice):
+                start = index.start
+                if idx >= start:
+                    vals.append(node)
+            else:
+                if idx == index:
+                    return node
+
+        if isinstance(index, slice) and len(vals) > 0:
+            return vals
 
         raise IndexError
 
     def __setitem__(self, index, value):
-        pass
+        for idx, node in enumerate(self):
+            if idx == index:
+                node.value = value
+        raise IndexError
 
     def __str__(self) -> str:
         values = [val for val in self]
-        val = self.format_collection(self.prefix_char, reversed(values), self.suffix_char)
+        val = self.format_collection(self.prefix_char, values, self.suffix_char)
         return val
 
     def __iter__(self):
         node = self.head
         while node:
-            yield str(node)
+            yield node
             node = node.rest
 
     def __contains__(self, value):
@@ -201,9 +215,9 @@ class Atom(EcheTypeBase):
 
 @attrs(frozen=True, cmp=False)
 class Integer(EcheTypeBase):
-    value = attrib()
+    value = attrib(convert=lambda x: int(x, base=10))
 
 
 @attrs(frozen=True, cmp=False)
 class Float(EcheTypeBase):
-    value = attrib()
+    value = attrib(convert=lambda x: float(x))

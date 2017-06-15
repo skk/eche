@@ -2,6 +2,7 @@ import traceback
 import sys
 
 from eche.eche_readline import getline
+from eche.eval import eval_ast
 
 
 # noinspection PyPep8Naming
@@ -11,7 +12,7 @@ def READ(data):
 
 # noinspection PyPep8Naming
 def EVAL(ast, env):
-    return ast
+    return eval_ast(ast, env)
 
 
 # noinspection PyPep8Naming
