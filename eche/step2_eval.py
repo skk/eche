@@ -1,11 +1,11 @@
 import traceback
 import sys
 
-import pprintpp
-
 from eche.eche_readline import getline
 from eche.reader import read_str, Blank
 from eche.printer import print_str
+
+from eval import eval_ast, repl_env
 
 
 # noinspection PyPep8Naming
@@ -14,9 +14,8 @@ def READ(data):
 
 
 # noinspection PyPep8Naming
-def EVAL(ast, _):
-    pprintpp.pprint(ast)
-    return ast
+def EVAL(ast, env):
+    return eval_ast(ast, env)
 
 
 # noinspection PyPep8Naming
@@ -26,7 +25,7 @@ def PRINT(exp):
 
 # noinspection PyPep8Naming
 def REP(data):
-    return PRINT(EVAL(READ(data), {}))
+    return PRINT(EVAL(READ(data), repl_env))
 
 
 def repl():
