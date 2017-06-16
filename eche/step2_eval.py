@@ -2,12 +2,15 @@ import traceback
 import sys
 
 from eche.eche_readline import getline
-from eche.eval import eval_ast
+from eche.reader import read_str, Blank
+from eche.printer import print_str
+
+from eval import eval_ast, repl_env
 
 
 # noinspection PyPep8Naming
 def READ(data):
-    return data
+    return read_str(data)
 
 
 # noinspection PyPep8Naming
@@ -17,12 +20,12 @@ def EVAL(ast, env):
 
 # noinspection PyPep8Naming
 def PRINT(exp):
-    return exp
+    return print_str(exp)
 
 
 # noinspection PyPep8Naming
 def REP(data):
-    return PRINT(EVAL(READ(data), {}))
+    return PRINT(EVAL(READ(data), repl_env))
 
 
 def repl():
@@ -34,6 +37,11 @@ def repl():
             if line == '':
                 continue
             print(REP(line))
+        except Blank:
+            continue
+        except SyntaxError as e:
+            print("".join(traceback.format_exception(*sys.exc_info())))
+            continue
         except IOError as e:
             print("".join(traceback.format_exception(*sys.exc_info())))
             break

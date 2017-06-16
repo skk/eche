@@ -22,7 +22,9 @@ class EcheTypeBase(object, metaclass=ABCMeta):
         return str(self.value)
 
     def format_collection(self, prefix_char, collection, suffix_char, sep=' '):
-        val = prefix_char + sep.join([str(e) for e in collection]) + suffix_char
+        val = prefix_char + sep.join([str(e)
+                                      for e in collection
+                                      if e is not None or e is not END_NODE]) + suffix_char
         return val
 
 
@@ -33,6 +35,9 @@ EcheTypeBase.register(dict)
 @attrs(frozen=True, cmp=False)
 class Symbol(EcheTypeBase):
     value = attrib()
+
+    def __hash__(self) -> int:
+        return hash(self.value)
 
 
 # noinspection PyUnresolvedReferences
@@ -83,59 +88,68 @@ class Vector(list, EcheTypeBase):
         return val
 
 
+def node_data_convert(val):
+    if isinstance(val, Node):
+        return val.data
+    else:
+        return val
+
+
 @attrs(frozen=False, cmp=False)
 class Node(object):
     rest = attrib(default=None)
-    data = attrib(default=None)
+    data = attrib(default=None, convert=node_data_convert)
 
     @data.validator
     def check(self, attribute, value):
         if attribute == 'data' and isinstance(value, List):
             raise TypeError("data attrib can't be List")
 
-    def __str__(self):
+    def __eq__(self, o) -> bool:
+        return self.data == o.data
+
+    def __str__(self) -> str:
         return str(self.data)
+
+END_NODE = Node()
 
 
 @attrs(frozen=False, cmp=False)
 class List(MutableSequence, EcheTypeBase):
-    head = attrib(default=None)
+    head = attrib(default=END_NODE)
     length = attrib(default=0)
 
     # TODO: delete at beginning
-
-    # insert at beginning
-    def push(self, new_data) -> None:
-        self.length += 1
-        new_node = Node(data=new_data, rest=self.head)
-        self.head = new_node
-
     # TODO: delete at middle
+
+    # insert at end
+    def append(self, new_data) -> None:
+        new_node = Node(data=node_data_convert(new_data))
+
+        if self.head is END_NODE or self.head is None:
+            self.head = new_node
+        else:
+            last = self.head
+            while last.rest:
+                last = last.rest
+            last.rest = new_node
+
+        self.length += 1
+
     # insert at middle
     def insert_after(self, prev_node, new_data) -> None:
+        raise NotImplementedError
 
-        if prev_node is None:
-            raise ValueError("prev_node is None")
+    # insert at beginning
+    def prepend(self, new_data: typing.Union[Node, EcheTypeBase]) -> None:
+        new_node = Node(data=node_data_convert(new_data))
 
-        self.length += 1
-        prev_node.rest = Node(data=new_data, rest=prev_node)
-
-    # TODO: insert at end
-    # delete at end
-    def append(self, new_data) -> None:
-
-        new_node = Node(data=new_data)
-
-        if self.head is None:
+        if self.head is END_NODE or self.head is None:
             self.head = new_node
-            self.length += 1
-            return
-
-        last = self.head
-        while last.rest:
-            last = last.rest
-
-        last.rest = new_node
+        else:
+            new_node.rest = self.head.rest
+            self.head = new_node
+        self.length += 1
 
     def __len__(self) -> int:
         return self.length
@@ -147,24 +161,36 @@ class List(MutableSequence, EcheTypeBase):
         pass
 
     def __getitem__(self, index):
-        for val, idx in enumerate(self):
-            if idx == index:
-                return val
+        vals = []
+        for idx, node in enumerate(self):
+            if isinstance(index, slice):
+                start = index.start
+                if idx >= start:
+                    vals.append(node)
+            else:
+                if idx == index:
+                    return node
+
+        if isinstance(index, slice) and len(vals) > 0:
+            return vals
 
         raise IndexError
 
     def __setitem__(self, index, value):
-        pass
+        for idx, node in enumerate(self):
+            if idx == index:
+                node.value = value
+        raise IndexError
 
     def __str__(self) -> str:
-        values = [val for val in self]
-        val = self.format_collection(self.prefix_char, reversed(values), self.suffix_char)
+        values = [val for val in self if val.data is not None]
+        val = self.format_collection(self.prefix_char, values, self.suffix_char)
         return val
 
     def __iter__(self):
         node = self.head
         while node:
-            yield str(node)
+            yield node
             node = node.rest
 
     def __contains__(self, value):
@@ -201,9 +227,9 @@ class Atom(EcheTypeBase):
 
 @attrs(frozen=True, cmp=False)
 class Integer(EcheTypeBase):
-    value = attrib()
+    value = attrib(convert=lambda x: int(x, base=10))
 
 
 @attrs(frozen=True, cmp=False)
 class Float(EcheTypeBase):
-    value = attrib()
+    value = attrib(convert=lambda x: float(x))

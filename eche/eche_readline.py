@@ -25,7 +25,7 @@ class Readline(object):
 
     def __init__(self):
         self.history_loaded = False
-        self.histfile = os.path.expanduser('~/.mal-history')
+        self.histfile = os.path.expanduser('~/.eche-history')
 
     def notty_readline(self, prompt_msg='user> '):
         rl = input

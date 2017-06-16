@@ -85,11 +85,10 @@ def read_vector(reader: Reader) -> Vector:
 
 
 def read_list(reader: Reader) -> List:
-    llist = List()
+    linked_list = List()
     for val in read_sequence(reader, List.prefix_char, List.suffix_char):
-        llist.push(val)
-
-    return llist
+        linked_list.append(val)
+    return linked_list
 
 
 def read_dict(reader: Reader) -> Dict:
@@ -131,10 +130,20 @@ def read_atom(reader: Reader) -> EcheTypeBase:
 
     # print(f"read_atom token {token}")
 
-    if re.match(int_re, token):
-        atom = Integer(token)
-    elif re.match(float_re, token):
-        atom = Float(token)
+    if re.match(int_re, token) or re.match(float_re, token):
+        try:
+            atom = Integer(token)
+        except ValueError:
+            pass
+        else:
+            return atom
+
+        try:
+            atom = Float(token)
+        except ValueError:
+            pass
+        else:
+            return atom
     elif token[0] == '"':
         if token[-1] == '"':
             return String(token[1:-1])

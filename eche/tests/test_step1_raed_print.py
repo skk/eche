@@ -9,12 +9,20 @@ import math
 @pytest.mark.parametrize("test_input", [
     '1',
     '-1',
-    '0',
-    str(math.pi),
-    str(math.e)
+    '0'
 ])
-def test_numbers(test_input):
+def test_number_int(test_input):
     assert print_str(read_str(test_input)) == test_input
+
+
+@pytest.mark.parametrize("test_input", [
+    '1.0',
+    '1.2543534',
+    '5254.47318209'
+])
+def test_number_float(test_input):
+    assert print_str(read_str(test_input)) == test_input
+
 
 
 @pytest.mark.parametrize("test_input", [
