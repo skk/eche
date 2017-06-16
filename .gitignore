@@ -45,3 +45,4 @@ jspm_packages
 /.coverage
 /build/
 /dist/
+/echo.egg-info/
