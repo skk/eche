@@ -46,7 +46,7 @@ def eval_ast(ast, env):
         if len(ast) == 0:
             return ast
 
-        ast = [Node(data=eval_ast(node, env)) for node in ast]
+        ast = [Node(data=eval_ast(node, env)) for node in ast if bool(node)]
         try:
             fn = ast[0].data
         except (IndexError, AttributeError):

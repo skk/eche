@@ -22,7 +22,9 @@ class EcheTypeBase(object, metaclass=ABCMeta):
         return str(self.value)
 
     def format_collection(self, prefix_char, collection, suffix_char, sep=' '):
-        val = prefix_char + sep.join([str(e) for e in collection]) + suffix_char
+        val = prefix_char + sep.join([str(e)
+                                      for e in collection
+                                      if e is not None or e is not END_NODE]) + suffix_char
         return val
 
 
@@ -103,13 +105,18 @@ class Node(object):
         if attribute == 'data' and isinstance(value, List):
             raise TypeError("data attrib can't be List")
 
-    def __str__(self):
+    def __eq__(self, o) -> bool:
+        return self.data == o.data
+
+    def __str__(self) -> str:
         return str(self.data)
+
+END_NODE = Node()
 
 
 @attrs(frozen=False, cmp=False)
 class List(MutableSequence, EcheTypeBase):
-    head = attrib(default=None)
+    head = attrib(default=END_NODE)
     length = attrib(default=0)
 
     # TODO: delete at beginning
@@ -117,33 +124,32 @@ class List(MutableSequence, EcheTypeBase):
 
     # insert at end
     def append(self, new_data) -> None:
+        new_node = Node(data=node_data_convert(new_data))
+
+        if self.head is END_NODE or self.head is None:
+            self.head = new_node
+        else:
+            last = self.head
+            while last.rest:
+                last = last.rest
+            last.rest = new_node
+
         self.length += 1
-        new_node = Node(data=new_data, rest=self.head)
-        self.head = new_node
 
     # insert at middle
     def insert_after(self, prev_node, new_data) -> None:
-
-        if prev_node is None:
-            raise ValueError("prev_node is None")
-
-        self.length += 1
-        prev_node.rest = Node(data=new_data, rest=prev_node)
+        raise NotImplementedError
 
     # insert at beginning
     def prepend(self, new_data: typing.Union[Node, EcheTypeBase]) -> None:
-        node = node_data_convert(new_data)
+        new_node = Node(data=node_data_convert(new_data))
 
-        if self.head is None:
-            self.head = node
-            self.length += 1
-            return
-
-        last = self.head
-        while last.rest:
-            last = last.rest
-
-        last.rest = node
+        if self.head is END_NODE or self.head is None:
+            self.head = new_node
+        else:
+            new_node.rest = self.head.rest
+            self.head = new_node
+        self.length += 1
 
     def __len__(self) -> int:
         return self.length
@@ -177,7 +183,7 @@ class List(MutableSequence, EcheTypeBase):
         raise IndexError
 
     def __str__(self) -> str:
-        values = [val for val in self]
+        values = [val for val in self if val.data is not None]
         val = self.format_collection(self.prefix_char, values, self.suffix_char)
         return val
 
