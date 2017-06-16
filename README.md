@@ -1,6 +1,7 @@
 # eche
 
-[![Build Status](https://travis-ci.org/kanaka/mal.svg?branch=master)](https://travis-ci.org/kanaka/mal)
+[![Build Status](https://travis-ci.org/skk/eche.svg?branch=master)](https://travis-ci
+.org/skk/eche)
 
 ## Description
 
