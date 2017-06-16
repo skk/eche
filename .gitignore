@@ -43,3 +43,5 @@ jspm_packages
 *.mal
 /.cache/
 /.coverage
+/build/
+/dist/
