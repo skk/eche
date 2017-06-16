@@ -87,7 +87,7 @@ def read_vector(reader: Reader) -> Vector:
 def read_list(reader: Reader) -> List:
     linked_list = List()
     for val in read_sequence(reader, List.prefix_char, List.suffix_char):
-        linked_list.prepend(val)
+        linked_list.append(val)
     return linked_list
 
 
