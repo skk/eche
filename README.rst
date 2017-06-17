@@ -3,8 +3,6 @@ eche
 
 `Build-Status`_
 
-Click on my |ImageLink|_
-
 Description
 ***********
 
