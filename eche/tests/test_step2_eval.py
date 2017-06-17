@@ -3,7 +3,7 @@ import pytest
 
 from eche.reader import read_str
 from eche.eval import eval_ast, repl_env
-from eche_types import Node
+from eche.eche_types import Node
 
 
 @pytest.mark.parametrize("test_input,expected_value", [

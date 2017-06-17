@@ -6,7 +6,7 @@ license="MPL 2.0"
 authors = [
     "Steven Knight <steven@knight.cx>"
 ]
-readme = 'README.rst'
+readme = 'README.md'
 repository = "https://github.com/skk/echo"
 homepage = "https://github.com/skk/echo"
 keywords = []
