@@ -1,7 +1,7 @@
 eche
 ####
 
-`Build-Status`_
+`BuildStatus`_
 
 Description
 ***********
@@ -19,5 +19,5 @@ MIT License; see `LICENSE.txt`_ for more details.
 .. _make-a-lisp: https://github.com/kanaka/mal
 .. _Build-Status: https://travis-ci.org/skk/eche.svg?branch=master
 
-.. |Build-Status| image:: https://travis-ci.org/skk/eche.svg?branch=master
-.. _Build-Status: https://travis-ci.org/skk/eche.svg?branch=master
+.. |BuildStatus| image:: https://travis-ci.org/skk/eche.svg?branch=master
+.. _BuildStatus: https://travis-ci.org/skk/eche.svg?branch=master
