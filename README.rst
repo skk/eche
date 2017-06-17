@@ -1,7 +1,9 @@
 eche
 ####
 
-`Build Status`_
+`Build-Status`_
+
+Click on my |ImageLink|_
 
 Description
 ***********
@@ -17,4 +19,7 @@ MIT License; see `LICENSE.txt`_ for more details.
 .. _LICENSE.txt: LICENSE.txt
 .. _guide: https://github.com/kanaka/mal/blob/master/process/guide.md
 .. _make-a-lisp: https://github.com/kanaka/mal
-.. _Build Status: https://travis-ci.org/skk/eche.svg?branch=master
+.. _Build-Status: https://travis-ci.org/skk/eche.svg?branch=master
+
+.. |Build-Status| image:: https://travis-ci.org/skk/eche.svg?branch=master
+.. _Build-Status: https://travis-ci.org/skk/eche.svg?branch=master
