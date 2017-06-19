@@ -1,14 +1,13 @@
 import pytest
 
-from eche.reader import read_str
-from eche.printer import print_str
+from eche.tests import print_str_and_read_str_wrapper
 
 
 @pytest.mark.parametrize("test_input", [
     'abcABC123',
 ])
 def test_parsing_symbol(test_input):
-    assert print_str(read_str(test_input)) == test_input
+    assert print_str_and_read_str_wrapper(test_input)
 
 
 # noinspection SpellCheckingInspection
@@ -17,4 +16,4 @@ def test_parsing_symbol(test_input):
     '\"abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789{}[]()<>!@#$%^Y.\"',
 ])
 def test_str_parsing(test_input):
-    assert print_str(read_str(test_input)) == test_input
+    assert print_str_and_read_str_wrapper(test_input)
