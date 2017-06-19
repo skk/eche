@@ -1,4 +1,4 @@
-import re
+from re import compile, match, findall
 import typing
 
 from funcy.seqs import chunks
@@ -11,8 +11,8 @@ class Blank(Exception):
     pass
 
 
-int_re = re.compile(r"-?[0-9]+")
-float_re = re.compile(r"-?[0-9][0-9.]*")
+int_re = compile(r"-?[0-9]+")
+float_re = compile(r"-?[0-9][0-9.]*")
 
 
 class Reader(object):
@@ -43,9 +43,8 @@ def read_str(data: str) -> typing.List[typing.Any]:
 
 
 def tokenize(data: str) -> typing.List[str]:
-    tre = re.compile(
-        r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""")
-    tokens = [t for t in re.findall(tre, data) if t[0] != ';']
+    tre = compile(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""")
+    tokens = [t for t in findall(tre, data) if t[0] != ';']
     return tokens
 
 
@@ -130,7 +129,7 @@ def read_atom(reader: Reader) -> EcheTypeBase:
 
     # print(f"read_atom token {token}")
 
-    if re.match(int_re, token) or re.match(float_re, token):
+    if match(int_re, token) or match(float_re, token):
         try:
             atom = Integer(token)
         except ValueError:
