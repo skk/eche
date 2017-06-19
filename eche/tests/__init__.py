@@ -1,7 +1,7 @@
 
 from eche.printer import print_str
 from eche.reader import read_str
-from eche_types import Node, EcheTypeBase
+from eche.eche_types import Node, EcheTypeBase
 from eche.eval import eval_ast
 
 
