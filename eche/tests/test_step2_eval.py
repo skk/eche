@@ -3,7 +3,7 @@ import pytest
 
 from eche.reader import read_str
 from eche.eval import eval_ast, repl_env
-from eche.eche_types import Node
+from eche.eche_types import Node, Vector
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
@@ -60,3 +60,11 @@ def test_eval_exp(test_input, expected_value):
 def test_eval_exp(test_input, expected_value):
     ast = read_str(test_input)
     assert eval_ast(ast, repl_env) == Node(data=expected_value)
+
+
+@pytest.mark.parametrize("test_input,expected_value", [
+    ('[1, 2, 3]', [1, 2, 3]),
+])
+def test_eval_vector(test_input, expected_value):
+    ast = eval_ast(read_str(test_input), repl_env)
+    assert ast == Vector(expected_value)

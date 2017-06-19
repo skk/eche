@@ -1,4 +1,4 @@
-from eche.eche_types import List, Symbol, Node
+from eche.eche_types import List, Symbol, Node, Vector
 
 
 def multiply(a: Node, b: Node) -> Node:
@@ -42,7 +42,9 @@ def eval_ast(ast, env):
     if isinstance(ast, Node):
         ast = ast.data
 
-    if isinstance(ast, List):
+    if isinstance(ast, Vector):
+        return ast
+    elif isinstance(ast, List):
         if len(ast) == 0:
             return ast
 
