@@ -4,7 +4,7 @@ import typing
 from funcy.seqs import chunks
 
 from eche.eche_types import Symbol, String, Boolean, Nil, Integer, Float, EcheTypeBase, Dict, \
-    Vector, List
+    Vector, List, Keyword
 
 
 class Blank(Exception):
@@ -13,6 +13,7 @@ class Blank(Exception):
 
 int_re = compile(r"-?[0-9]+")
 float_re = compile(r"-?[0-9][0-9.]*")
+keyword_prefix = '\u029E'
 
 
 class Reader(object):
@@ -143,6 +144,8 @@ def read_atom(reader: Reader) -> EcheTypeBase:
             pass
         else:
             return atom
+    elif token[0] == keyword_prefix:
+        atom = Keyword(token[1:])
     elif token[0] == '"':
         if token[-1] == '"':
             return String(token[1:-1])

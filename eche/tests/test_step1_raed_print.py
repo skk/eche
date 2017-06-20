@@ -2,6 +2,8 @@ import pytest
 
 from eche.tests import print_str_and_read_str_wrapper
 from eche.reader import read_str, Blank
+from eche.reader import keyword_prefix
+from eche.eche_types import Keyword
 
 
 @pytest.mark.parametrize("test_input", [
@@ -107,6 +109,14 @@ def test_comments_blank(test_input):
 ])
 def test_comments(test_input, expected):
     assert print_str_and_read_str_wrapper(test_input, expected)
+
+
+@pytest.mark.parametrize("test_input,expected", [
+    (f"{keyword_prefix}KEY", Keyword('KEY')),
+])
+def test_keyword(test_input, expected):
+    assert print_str_and_read_str_wrapper(test_input, expected)
+
 
 # TODO - add tests for:
 # * read of ^/metadata

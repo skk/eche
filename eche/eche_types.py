@@ -40,6 +40,14 @@ class Symbol(EcheTypeBase):
         return hash(self.value)
 
 
+@attrs(frozen=True, cmp=False)
+class Keyword(EcheTypeBase):
+    value = attrib()
+
+    def __hash__(self) -> int:
+        return hash(self.value)
+
+
 # noinspection PyUnresolvedReferences
 @attrs(frozen=True, cmp=False)
 class String(EcheTypeBase):
