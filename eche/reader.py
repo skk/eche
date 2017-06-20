@@ -133,22 +133,23 @@ def read_atom(reader: Reader) -> EcheTypeBase:
     if match(int_re, token) or match(float_re, token):
         try:
             atom = Integer(token)
-        except ValueError:
-            pass
-        else:
-            return atom
+        except ValueError as int_error:
+            try:
+                atom = Float(token)
+            except ValueError as float_error:
+                raise float_error
+            else:
+                pass
 
-        try:
-            atom = Float(token)
-        except ValueError:
-            pass
+            if atom is None and int_error:
+                raise int_error
         else:
-            return atom
+            pass
     elif token[0] == keyword_prefix:
         atom = Keyword(token[1:])
     elif token[0] == '"':
         if token[-1] == '"':
-            return String(token[1:-1])
+            atom = String(token[1:-1])
         else:
             raise ValueError("expected '\"', got EOF")
     elif token == 'nil':
