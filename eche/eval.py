@@ -1,43 +1,22 @@
+import typing
+
 from eche.eche_types import List, Symbol, Node, Vector
+from eche.env import env
 
 
-def multiply(a: Node, b: Node) -> Node:
-    return Node(data=a.data * b.data)
+def get_data(node: Node) -> typing.Any:
+    while isinstance(node, Node):
+        if isinstance(node.data, Node):
+            node = node.data
+        else:
+            break
+
+    return node
 
 
-def add(a: Node, b: Node) -> Node:
-    return Node(data=a.data + b.data)
-
-
-def subtract(a: Node, b: Node) -> Node:
-    return Node(data=a.data - b.data)
-
-
-def divide(a: Node, b: Node) -> Node:
-    return Node(data=a.data / b.data)
-
-
-def exp(a: Node, b: Node) -> Node:
-    return Node(data=pow(a.data, b.data))
-
-
-def mod(a: Node, b: Node) -> Node:
-    return Node(data=a.data % b.data)
-
-
-repl_env = {
-    Symbol('+'): add,
-    Symbol('-'): subtract,
-    Symbol('*'): multiply,
-    Symbol('/'): divide,
-    Symbol('^'): exp,
-    Symbol('%'): mod
-}
-
-
-def eval_ast(ast, env):
-    if env is None:
-        env = repl_env
+def eval_ast(ast, _env):
+    if _env is None:
+        _env = env
 
     if isinstance(ast, Node):
         ast = ast.data
@@ -48,18 +27,19 @@ def eval_ast(ast, env):
         if len(ast) == 0:
             return ast
 
-        ast = [Node(data=eval_ast(node, env)) for node in ast if bool(node)]
+        ast = [Node(data=eval_ast(node, _env)) for node in ast]
         try:
             fn = ast[0].data
         except (IndexError, AttributeError):
             fn = None
 
         if callable(fn):
-            vals = fn(*ast[1:])
-            return vals
+            ast = [get_data(node) for node in ast]
+            val = fn(*ast[1:])
+            return val
         else:
             return ast
     elif isinstance(ast, Symbol):
-        return env[ast]
+        return _env[ast]
     else:
         return ast.value

@@ -4,9 +4,8 @@ import sys
 from eche.eche_readline import getline
 from eche.reader import read_str, Blank
 from eche.printer import print_str
-
-from eval import eval_ast
-from env import env
+from eche.env import env
+from eche.eval import eval_ast
 
 
 # noinspection PyPep8Naming
@@ -15,8 +14,8 @@ def READ(data):
 
 
 # noinspection PyPep8Naming
-def EVAL(ast, env_):
-    return eval_ast(ast, env_)
+def EVAL(ast, _env):
+    return eval_ast(ast, _env)
 
 
 # noinspection PyPep8Naming

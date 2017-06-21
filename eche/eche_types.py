@@ -1,6 +1,6 @@
 import typing
 from abc import ABCMeta
-from collections import OrderedDict, MutableSequence
+from collections import OrderedDict, MutableSequence, MutableMapping
 
 from attr import attrs, attrib
 
@@ -82,6 +82,36 @@ class Dict(OrderedDict, EcheTypeBase):
 
         val = self.format_collection(self.prefix_char, values, self.suffix_char)
         return val
+
+
+@attrs(frozen=False, cmp=False)
+class Env(MutableMapping):
+    outer = attrib(default=None)
+    data = attrib(default=Dict())
+
+    def __delitem__(self, key: Symbol):
+        del self.data[key]
+
+    def __setitem__(self, key: Symbol, value: object):
+        self.data[key] = value
+
+    def __len__(self) -> int:
+        return len(self.data)
+
+    def __iter__(self) -> object:
+        return iter(self.data)
+
+    def __getitem__(self, key: Symbol) -> object:
+        return self.data[key]
+
+    def find(self, key: Symbol) -> object:
+        try:
+            return self[key]
+        except KeyError:
+            if self.outer is None:
+                raise
+            else:
+                return self.outer.find(key)
 
 
 class Vector(list, EcheTypeBase):
