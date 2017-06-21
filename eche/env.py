@@ -1,4 +1,5 @@
-from eche.eche_types import Node, Symbol, Env
+from eche.eche_types import Node, Symbol as S, Env
+from eche.special_forms import special_forms
 
 
 def multiply(a: Node, b: Node) -> Node:
@@ -26,10 +27,12 @@ def mod(a: Node, b: Node) -> Node:
 
 env = Env()
 env.data.update({
-    Symbol('+'): add,
-    Symbol('-'): subtract,
-    Symbol('*'): multiply,
-    Symbol('/'): divide,
-    Symbol('^'): exp,
-    Symbol('%'): mod
+    S('+'): add,
+    S('-'): subtract,
+    S('*'): multiply,
+    S('/'): divide,
+    S('^'): exp,
+    S('%'): mod,
 })
+
+env.data.update(special_forms)

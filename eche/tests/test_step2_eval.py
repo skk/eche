@@ -1,7 +1,7 @@
 
 import pytest
 
-from env import env
+from eche.env import env
 from eche.tests import eval_ast_and_read_str
 
 

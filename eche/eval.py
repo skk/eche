@@ -39,7 +39,10 @@ def eval_ast(ast, _env):
             return val
         else:
             return ast
-    elif isinstance(ast, Symbol):
+    elif isinstance(ast, Symbol) and ast in _env:
         return _env[ast]
     else:
-        return ast.value
+        try:
+            return ast.value
+        except AttributeError:
+            return ast

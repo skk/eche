@@ -1,3 +1,4 @@
+import typing
 import traceback
 import sys
 
@@ -5,8 +6,8 @@ from eche.eche_readline import getline
 from eche.reader import read_str, Blank
 from eche.printer import print_str
 
-from eval import eval_ast
-from env import env
+from eche.eval import eval_ast
+from eche.env import env
 
 
 # noinspection PyPep8Naming

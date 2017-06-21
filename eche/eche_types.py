@@ -32,6 +32,12 @@ EcheTypeBase.register(list)
 EcheTypeBase.register(dict)
 
 
+@attrs(frozen=False, cmp=False)
+class AST(object):
+    env = attrib()
+    ast = attrib()
+
+
 @attrs(frozen=True, cmp=False)
 class Symbol(EcheTypeBase):
     value = attrib()
@@ -135,6 +141,9 @@ def node_data_convert(val):
 
 @attrs(frozen=False, cmp=False)
 class Node(object):
+    def __hash__(self) -> int:
+        return hash(self.data)
+
     rest = attrib(default=None)
     data = attrib(default=None, convert=node_data_convert)
 
