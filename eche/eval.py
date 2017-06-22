@@ -1,7 +1,6 @@
 import typing
 
 from eche.eche_types import List, Symbol, Node, Vector
-from eche.env import env
 
 
 def get_data(node: Node) -> typing.Any:
@@ -14,10 +13,7 @@ def get_data(node: Node) -> typing.Any:
     return node
 
 
-def eval_ast(ast, _env):
-    if _env is None:
-        _env = env
-
+def eval_ast(ast, env):
     if isinstance(ast, Node):
         ast = ast.data
 
@@ -27,20 +23,27 @@ def eval_ast(ast, _env):
         if len(ast) == 0:
             return ast
 
-        ast = [Node(data=eval_ast(node, _env)) for node in ast]
+        l = List(env=env)
+        for node in ast:
+            l.append(eval_ast(node, env))
+        ast = l
+
         try:
             fn = ast[0].data
         except (IndexError, AttributeError):
             fn = None
 
         if callable(fn):
-            ast = [get_data(node) for node in ast]
-            val = fn(*ast[1:])
+            l = List()
+            for node in ast:
+                l.append(get_data(node))
+            l.env = env
+            val = fn(l)
             return val
         else:
             return ast
-    elif isinstance(ast, Symbol) and ast in _env:
-        return _env[ast]
+    elif isinstance(ast, Symbol) and ast in env:
+        return env[ast]
     else:
         try:
             return ast.value

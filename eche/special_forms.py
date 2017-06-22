@@ -1,18 +1,19 @@
-from eche.eche_types import Symbol as S, Node
+from eche.eche_types import Symbol as S, Node, List
 
 
-def def_exclamation_mark(*args, _env=None):
+def def_exclamation_mark(ast):
     from eche.eval import eval_ast
-    from eche.env import env
 
-    if _env is None:
-        _env = env
+    _, key, val = ast
+    l = List()
+    l.append(key)
+    l.append(val)
+    l.env = ast.env
 
-    key, ast = args
-    ast = eval_ast(ast, _env=_env)
-    _env[key] = ast
-    if not isinstance(ast, Node):
-        ast = Node(data=ast)
+    _, val = eval_ast(l, ast.env)
+    ast.env[key] = val
+    # if not isinstance(ast, Node):
+    #     ast = Node(data=ast)
 
     return ast
 

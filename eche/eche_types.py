@@ -32,12 +32,6 @@ EcheTypeBase.register(list)
 EcheTypeBase.register(dict)
 
 
-@attrs(frozen=False, cmp=False)
-class AST(object):
-    env = attrib()
-    ast = attrib()
-
-
 @attrs(frozen=True, cmp=False)
 class Symbol(EcheTypeBase):
     value = attrib()
@@ -153,7 +147,12 @@ class Node(object):
             raise TypeError("data attrib can't be List")
 
     def __eq__(self, o) -> bool:
-        return self.data == o.data
+        try:
+            val = o.data
+        except AttributeError:
+            val = o
+
+        return self.data == val
 
     def __str__(self) -> str:
         return str(self.data)
@@ -163,6 +162,7 @@ END_NODE = Node()
 
 @attrs(frozen=False, cmp=False)
 class List(MutableSequence, EcheTypeBase):
+    env = attrib(default=Env())
     head = attrib(default=END_NODE)
     length = attrib(default=0)
 

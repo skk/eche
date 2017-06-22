@@ -1,29 +1,38 @@
+import typing
+
 from eche.eche_types import Node, Symbol as S, Env
 from eche.special_forms import special_forms
 
 
-def multiply(a: Node, b: Node) -> Node:
+def multiply(ast: typing.List[Node]) -> Node:
+    _, a, b = ast
     return Node(data=a.data * b.data)
 
 
-def add(a: Node, b: Node) -> Node:
+def add(ast: typing.List[Node]) -> Node:
+    _, a, b = ast
     return Node(data=a.data + b.data)
 
 
-def subtract(a: Node, b: Node) -> Node:
+def subtract(ast: typing.List[Node]) -> Node:
+    _, a, b = ast
     return Node(data=a.data - b.data)
 
 
-def divide(a: Node, b: Node) -> Node:
+def divide(ast: typing.List[Node]) -> Node:
+    _, a, b = ast
     return Node(data=a.data / b.data)
 
 
-def exp(a: Node, b: Node) -> Node:
+def exp(ast: typing.List[Node]) -> Node:
+    _, a, b = ast
     return Node(data=pow(a.data, b.data))
 
 
-def mod(a: Node, b: Node) -> Node:
+def mod(ast: typing.List[Node]) -> Node:
+    _, a, b = ast
     return Node(data=a.data % b.data)
+
 
 env = Env()
 env.data.update({
@@ -36,3 +45,4 @@ env.data.update({
 })
 
 env.data.update(special_forms)
+default_env = env

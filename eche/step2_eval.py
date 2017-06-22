@@ -1,4 +1,3 @@
-import typing
 import traceback
 import sys
 
@@ -7,7 +6,7 @@ from eche.reader import read_str, Blank
 from eche.printer import print_str
 
 from eche.eval import eval_ast
-from eche.env import env
+from eche.env import default_env
 
 
 # noinspection PyPep8Naming
@@ -16,8 +15,8 @@ def READ(data):
 
 
 # noinspection PyPep8Naming
-def EVAL(ast, env_):
-    return eval_ast(ast, env_)
+def EVAL(ast, env):
+    return eval_ast(ast, env)
 
 
 # noinspection PyPep8Naming
@@ -27,7 +26,7 @@ def PRINT(exp):
 
 # noinspection PyPep8Naming
 def REP(data):
-    return PRINT(EVAL(READ(data), env))
+    return PRINT(EVAL(READ(data), default_env))
 
 
 def repl():
