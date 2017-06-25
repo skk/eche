@@ -40,7 +40,6 @@ jspm_packages
 .mypy_cache/
 
 *.pyc
-*.mal
 /.cache/
 /.coverage
 /build/
