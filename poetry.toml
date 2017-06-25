@@ -1,6 +1,6 @@
 [package]
 name = "echo"
-version = "0.1.0"
+version = "0.3.0"
 description = ""
 license="MPL 2.0"
 authors = [
@@ -22,6 +22,7 @@ attrs = "^17.2.0"
 funcy = "^1.7.5"
 mypy = "^0.511"
 pprintpp = "^0.3.0"
+docopt = "0.6.2"
 
 [dev-dependencies]
 pytest = "^3.0"

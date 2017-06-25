@@ -4,9 +4,8 @@ import sys
 from eche.eche_readline import getline
 from eche.reader import read_str, Blank
 from eche.printer import print_str
-
-from eche.eval import eval_ast
 from eche.env import default_env
+from eche.eval import eval_ast
 
 
 # noinspection PyPep8Naming
@@ -33,16 +32,7 @@ def repl():
     while True:
         try:
             line = getline(prompt_msg='user> ')
-            if line is None:
-                break
-            if line == '':
-                continue
-            print(REP(line))
-        except Blank:
-            continue
-        except SyntaxError as e:
-            print("".join(traceback.format_exception(*sys.exc_info())))
-            continue
+            process_line(line)
         except IOError as e:
             print("".join(traceback.format_exception(*sys.exc_info())))
             break
@@ -50,9 +40,18 @@ def repl():
     return 0
 
 
-def main():
-    repl()
+def process_line(line):
+    try:
+        print(line)
+        print(REP(line))
+    except Blank:
+        return
+    except (SyntaxError, ValueError, TypeError) as e:
+        print("".join(traceback.format_exception(*sys.exc_info())))
+        return
 
 
-if __name__ == "__main__":
-    main()
+def process_file(input_file):
+    with open(input_file, 'r') as inbuf:
+        for line in inbuf:
+            process_line(line)

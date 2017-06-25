@@ -1,6 +1,6 @@
 import typing
 from abc import ABCMeta
-from collections import OrderedDict, MutableSequence
+from collections import OrderedDict, MutableSequence, MutableMapping
 
 from attr import attrs, attrib
 
@@ -84,6 +84,36 @@ class Dict(OrderedDict, EcheTypeBase):
         return val
 
 
+@attrs(frozen=False, cmp=False)
+class Env(MutableMapping):
+    outer = attrib(default=None)
+    data = attrib(default=Dict())
+
+    def __delitem__(self, key: Symbol):
+        del self.data[key]
+
+    def __setitem__(self, key: Symbol, value: object):
+        self.data[key] = value
+
+    def __len__(self) -> int:
+        return len(self.data)
+
+    def __iter__(self) -> object:
+        return iter(self.data)
+
+    def __getitem__(self, key: Symbol) -> object:
+        return self.data[key]
+
+    def find(self, key: Symbol) -> object:
+        try:
+            return self[key]
+        except KeyError:
+            if self.outer is None:
+                raise
+            else:
+                return self.outer.find(key)
+
+
 class Vector(list, EcheTypeBase):
     prefix_char = '['
     suffix_char = ']'
@@ -105,6 +135,9 @@ def node_data_convert(val):
 
 @attrs(frozen=False, cmp=False)
 class Node(object):
+    def __hash__(self) -> int:
+        return hash(self.data)
+
     rest = attrib(default=None)
     data = attrib(default=None, convert=node_data_convert)
 
@@ -114,7 +147,12 @@ class Node(object):
             raise TypeError("data attrib can't be List")
 
     def __eq__(self, o) -> bool:
-        return self.data == o.data
+        try:
+            val = o.data
+        except AttributeError:
+            val = o
+
+        return self.data == val
 
     def __str__(self) -> str:
         return str(self.data)
@@ -124,6 +162,7 @@ END_NODE = Node()
 
 @attrs(frozen=False, cmp=False)
 class List(MutableSequence, EcheTypeBase):
+    env = attrib(default=Env())
     head = attrib(default=END_NODE)
     length = attrib(default=0)
 
