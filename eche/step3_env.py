@@ -28,7 +28,7 @@ def REP(data):
     return PRINT(EVAL(READ(data), default_env))
 
 
-def repl():
+def repl():  # pragma: no cover
     while True:
         try:
             line = getline(prompt_msg='user> ')
@@ -40,7 +40,7 @@ def repl():
     return 0
 
 
-def process_line(line):
+def process_line(line):  # pragma: no cover
     try:
         print(line)
         print(REP(line))
@@ -51,7 +51,14 @@ def process_line(line):
         return
 
 
-def process_file(input_file):
+def process_file(input_file):  # pragma: no cover
     with open(input_file, 'r') as inbuf:
         for line in inbuf:
             process_line(line)
+
+
+def main():  # pragma: no cover
+    repl()
+
+if __name__ == "__main__":  # pragma: no cover
+    repl()

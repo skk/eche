@@ -1,4 +1,4 @@
-from eche.eche_types import Symbol as S, Node, List
+from eche.eche_types import Symbol, List
 
 
 def def_exclamation_mark(ast):
@@ -19,10 +19,10 @@ def def_exclamation_mark(ast):
 
 
 def let_star(*args, env=None):
-    pass
+    pass  # pragma: no cover
 
 
 special_forms = {
-    S('def!'): def_exclamation_mark,
-    S('let*'): let_star
+    Symbol('def!'): def_exclamation_mark,
+    Symbol('let*'): let_star
 }

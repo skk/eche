@@ -9,7 +9,6 @@ class EcheTypeBase(object, metaclass=ABCMeta):
     value = None
 
     def __init__(self, value) -> None:
-        super().__init__()
         self.value = value
 
     def __eq__(self, other: typing.Any) -> bool:
@@ -119,10 +118,7 @@ class Vector(list, EcheTypeBase):
     suffix_char = ']'
 
     def __str__(self) -> str:
-        if len(self) == 0:
-            val = self.prefix_char + self.suffix_char
-        else:
-            val = self.format_collection(self.prefix_char, self, self.suffix_char)
+        val = self.format_collection(self.prefix_char, self, self.suffix_char)
         return val
 
 
