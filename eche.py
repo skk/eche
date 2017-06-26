@@ -3,7 +3,7 @@
 """Eche - a simple, lisp like language.
 
 Usage:
-    eche FILE ...
+    eche [FILE ...]
     eche (-h | --help)
     eche --version
 
@@ -33,8 +33,8 @@ def main():
     if 'FILE' in args:
         for filename in args['FILE']:
             eche.process_file(filename)
-    else:
-        sys.exit(eche.repl())
+        else:
+            sys.exit(eche.repl())
 
 if __name__ == "__main__":
     main()
