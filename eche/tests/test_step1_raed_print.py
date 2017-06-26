@@ -4,6 +4,8 @@ from eche.tests import print_str_and_read_str_wrapper
 from eche.reader import read_str, Blank
 from eche.reader import keyword_prefix
 from eche.eche_types import Keyword
+from eche.eche_types import List
+import eche.step1_read_print as step
 
 
 @pytest.mark.parametrize("test_input", [
@@ -118,6 +120,38 @@ def test_keyword(test_input, expected):
     assert print_str_and_read_str_wrapper(test_input, expected)
 
 
+@pytest.mark.parametrize("test_input", [
+    '(7 8)'
+])
+def test_read(test_input):
+    assert step.READ(test_input) == List(7, 8)
+
+
+@pytest.mark.parametrize("test_input", [
+    '(1 2 3)',
+    '(+ 1 2)'
+])
+def test_eval(test_input):
+    assert step.EVAL(test_input, None) == test_input
+
+
+@pytest.mark.parametrize("test_input", [
+    '(- 2 3)',
+    '(% 1 2)'
+])
+def test_print(test_input):
+    assert step.PRINT(test_input) == test_input
+
+
+@pytest.mark.parametrize("test_input", [
+    '(+ 2 3)',
+    '[5 6 7]'
+])
+def test_rep(test_input):
+    assert step.REP(test_input)
+
+
 # TODO - add tests for:
 # * read of ^/metadata
 # * read of @/deref
+

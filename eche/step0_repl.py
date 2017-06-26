@@ -2,7 +2,6 @@ import traceback
 import sys
 
 from eche.eche_readline import getline
-from eche.eval import eval_ast
 
 
 # noinspection PyPep8Naming
@@ -10,9 +9,9 @@ def READ(data):
     return data
 
 
-# noinspection PyPep8Naming
+# noinspection PyPep8Naming,PyUnusedLocal
 def EVAL(ast, env):
-    return eval_ast(ast, env)
+    return ast
 
 
 # noinspection PyPep8Naming
@@ -25,7 +24,7 @@ def REP(data):
     return PRINT(EVAL(READ(data), {}))
 
 
-def repl():
+def repl():  # pragma: no cover
     while True:
         try:
             line = getline(prompt_msg='user> ')
@@ -41,9 +40,8 @@ def repl():
     return 0
 
 
-def main():
+def main():  # pragma: no cover
     repl()
 
-
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

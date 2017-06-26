@@ -15,7 +15,6 @@ def READ(data):
 
 # noinspection PyPep8Naming
 def EVAL(ast, _):
-    pprintpp.pprint(ast)
     return ast
 
 
@@ -29,7 +28,7 @@ def REP(data):
     return PRINT(EVAL(READ(data), {}))
 
 
-def repl():
+def repl():  # pragma: no cover
     while True:
         try:
             line = getline(prompt_msg='user> ')
@@ -50,9 +49,8 @@ def repl():
     return 0
 
 
-def main():
+def main():  # pragma: no cover
     repl()
 
-
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

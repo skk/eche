@@ -4,7 +4,7 @@ import sys
 from eche.eche_readline import getline
 from eche.reader import read_str, Blank
 from eche.printer import print_str
-from eche.env import default_env
+from eche.env import get_default_env
 from eche.eval import eval_ast
 
 
@@ -24,15 +24,18 @@ def PRINT(exp):
 
 
 # noinspection PyPep8Naming
-def REP(data):
-    return PRINT(EVAL(READ(data), default_env))
+def REP(data, env=None):
+    if env is None:
+        env = get_default_env()
+    return PRINT(EVAL(READ(data), env))
 
 
-def repl():
+def repl():  # pragma: no cover
+    env = get_default_env()
     while True:
         try:
             line = getline(prompt_msg='user> ')
-            process_line(line)
+            process_line(line, env)
         except IOError as e:
             print("".join(traceback.format_exception(*sys.exc_info())))
             break
@@ -40,10 +43,10 @@ def repl():
     return 0
 
 
-def process_line(line):
+def process_line(line, env):  # pragma: no cover
     try:
         print(line)
-        print(REP(line))
+        print(REP(line, env))
     except Blank:
         return
     except (SyntaxError, ValueError, TypeError) as e:
@@ -51,7 +54,15 @@ def process_line(line):
         return
 
 
-def process_file(input_file):
+def process_file(input_file):  # pragma: no cover
+    env = get_default_env()
     with open(input_file, 'r') as inbuf:
         for line in inbuf:
-            process_line(line)
+            process_line(line, env)
+
+
+def main():  # pragma: no cover
+    repl()
+
+if __name__ == "__main__":  # pragma: no cover
+    repl()

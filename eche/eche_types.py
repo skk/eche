@@ -9,7 +9,6 @@ class EcheTypeBase(object, metaclass=ABCMeta):
     value = None
 
     def __init__(self, value) -> None:
-        super().__init__()
         self.value = value
 
     def __eq__(self, other: typing.Any) -> bool:
@@ -87,7 +86,10 @@ class Dict(OrderedDict, EcheTypeBase):
 @attrs(frozen=False, cmp=False)
 class Env(MutableMapping):
     outer = attrib(default=None)
-    data = attrib(default=Dict())
+    data = attrib(default=None)
+
+    def __attrs_post_init__(self):
+        self.data = Dict()
 
     def __delitem__(self, key: Symbol):
         del self.data[key]
@@ -119,10 +121,7 @@ class Vector(list, EcheTypeBase):
     suffix_char = ']'
 
     def __str__(self) -> str:
-        if len(self) == 0:
-            val = self.prefix_char + self.suffix_char
-        else:
-            val = self.format_collection(self.prefix_char, self, self.suffix_char)
+        val = self.format_collection(self.prefix_char, self, self.suffix_char)
         return val
 
 

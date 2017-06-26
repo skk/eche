@@ -21,7 +21,7 @@ def get_bottom_toolbar_tokens(_):
     return [(Token.Toolbar, u'Press Escape+Enter to end editing.')]
 
 
-class Readline(object):
+class ReadLine(object):
 
     def __init__(self):
         self.history_loaded = False
@@ -76,7 +76,7 @@ class Readline(object):
 
 
 def getline(prompt_msg):
-    rl = Readline()
+    rl = ReadLine()
     if os.isatty(0):
         return rl.tty_readline(prompt_msg)
     else:
