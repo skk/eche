@@ -1,6 +1,6 @@
 import pytest
 
-from eche_types import EcheTypeBase, Keyword, Env, Symbol
+from eche.eche_types import EcheTypeBase, Keyword, Env, Symbol
 
 
 def test_eche_type_base():
