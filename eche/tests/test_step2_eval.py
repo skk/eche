@@ -1,6 +1,6 @@
 import pytest
 
-from eche.env import env
+from eche.env import get_default_env
 from eche.eche_types import List
 from eche.tests import eval_ast_and_read_str
 import eche.step2_eval as step
@@ -12,7 +12,7 @@ import eche.step2_eval as step
     ('(+ 2 (* 3 4))', 14),
 ])
 def test_eval_add(test_input, expected_value):
-    assert eval_ast_and_read_str(test_input, env, expected_value)
+    assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
@@ -20,7 +20,7 @@ def test_eval_add(test_input, expected_value):
     ('(- 1 0)', 1),
 ])
 def test_eval_sub(test_input, expected_value):
-    assert eval_ast_and_read_str(test_input, env, expected_value)
+    assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
@@ -29,14 +29,14 @@ def test_eval_sub(test_input, expected_value):
     ('(+ 2 (* 3 4))', 14),
 ])
 def test_eval_mul(test_input, expected_value):
-    assert eval_ast_and_read_str(test_input, env, expected_value)
+    assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
     ('(/ 2 2)', 1),
 ])
 def test_eval_div(test_input, expected_value):
-    assert eval_ast_and_read_str(test_input, env, expected_value)
+    assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
@@ -45,7 +45,7 @@ def test_eval_div(test_input, expected_value):
     ('(^ 10^10)', 10_000_000_000),
 ])
 def test_eval_exp(test_input, expected_value):
-    assert eval_ast_and_read_str(test_input, env, expected_value)
+    assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
@@ -53,14 +53,14 @@ def test_eval_exp(test_input, expected_value):
     ('(% (^ 2 3) 5)', 3),
 ])
 def test_eval_exp(test_input, expected_value):
-    assert eval_ast_and_read_str(test_input, env, expected_value)
+    assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
     ('[1, 2, 3]', [1, 2, 3]),
 ])
 def test_eval_vector(test_input, expected_value):
-    assert eval_ast_and_read_str(test_input, env, expected_value)
+    assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
 
 
 @pytest.mark.parametrize("test_input", [

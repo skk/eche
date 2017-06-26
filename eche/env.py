@@ -1,6 +1,6 @@
 import typing
 
-from eche.eche_types import Node, Symbol as S, Env
+from eche.eche_types import Node, Symbol, Env
 from eche.special_forms import special_forms
 
 
@@ -34,15 +34,15 @@ def mod(ast: typing.List[Node]) -> Node:
     return Node(data=a.data % b.data)
 
 
-env = Env()
-env.data.update({
-    S('+'): add,
-    S('-'): subtract,
-    S('*'): multiply,
-    S('/'): divide,
-    S('^'): exp,
-    S('%'): mod,
-})
-
-env.data.update(special_forms)
-default_env = env
+def get_default_env():
+    env = Env()
+    env.data.update({
+        Symbol('+'): add,
+        Symbol('-'): subtract,
+        Symbol('*'): multiply,
+        Symbol('/'): divide,
+        Symbol('^'): exp,
+        Symbol('%'): mod,
+    })
+    env.data.update(special_forms)
+    return env

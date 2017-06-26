@@ -86,7 +86,10 @@ class Dict(OrderedDict, EcheTypeBase):
 @attrs(frozen=False, cmp=False)
 class Env(MutableMapping):
     outer = attrib(default=None)
-    data = attrib(default=Dict())
+    data = attrib(default=None)
+
+    def __attrs_post_init__(self):
+        self.data = Dict()
 
     def __delitem__(self, key: Symbol):
         del self.data[key]

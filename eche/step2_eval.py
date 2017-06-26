@@ -6,7 +6,7 @@ from eche.reader import read_str, Blank
 from eche.printer import print_str
 
 from eche.eval import eval_ast
-from eche.env import default_env
+from eche.env import get_default_env
 
 
 # noinspection PyPep8Naming
@@ -26,7 +26,7 @@ def PRINT(exp):
 
 # noinspection PyPep8Naming
 def REP(data):
-    return PRINT(EVAL(READ(data), default_env))
+    return PRINT(EVAL(READ(data), get_default_env()))
 
 
 def repl():  # pragma: no cover
