@@ -1,5 +1,6 @@
 import typing
 
+from eche.special_forms import let_star
 from eche.eche_types import List, Symbol, Node, Vector
 
 
@@ -17,15 +18,28 @@ def eval_ast(ast, env):
     if isinstance(ast, Node):
         ast = ast.data
 
-    if isinstance(ast, Vector):
+    if isinstance(ast, str):
+        return Symbol(ast)
+    elif isinstance(ast, Vector):
         return ast
     elif isinstance(ast, List):
         if len(ast) == 0:
             return ast
 
         l = List(env=env)
+
+        let_star_found = False
+
         for node in ast:
-            l.append(eval_ast(node, env))
+            if node.data.value == 'let*':
+                let_star_found = True
+
+            if node.data.value == 'let*':
+                l.append(eval_ast(node, env))
+            elif let_star_found:
+                l.append(node)
+            else:
+                l.append(eval_ast(node, env))
         ast = l
 
         try:
@@ -38,7 +52,7 @@ def eval_ast(ast, env):
             for node in ast:
                 l.append(get_data(node))
             l.env = env
-            val = fn(l)
+            val = fn(l, env=env)
             return val
         else:
             return ast
