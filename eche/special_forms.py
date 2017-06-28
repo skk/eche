@@ -1,9 +1,10 @@
 from funcy.seqs import partition
 
-from eche.eche_types import Symbol, List
+from eche.eche_types import Symbol, List, Env
 
 
-def def_exclamation_mark(ast, env=None):
+# noinspection PyUnusedLocal
+def def_exclamation_mark(ast, env: Env):
     from eche.eval import eval_ast
 
     _, key, val = ast
@@ -14,13 +15,11 @@ def def_exclamation_mark(ast, env=None):
 
     _, val = eval_ast(l, ast.env)
     ast.env[key] = val
-    # if not isinstance(ast, Node):
-    #     ast = Node(data=ast)
 
     return ast
 
 
-def let_star(ast, env=None):
+def let_star(ast, env: Env):
     from eche.env import get_default_env
     from eche.eval import eval_ast
 
