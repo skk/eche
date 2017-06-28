@@ -3,9 +3,7 @@
 ## Description
 
 A lisp-like Language interpreter.  It is based on the
-[make-a-lisp](https://github.com/kanaka/mal)
- [guild](https://github.com/kanaka/mal/blob/master/process/guide.md);
- steps 0 through 3 of the guide have been completed.
+[make-a-lisp](https://github.com/kanaka/mal) guide; steps 0 through 3 of the [guide](https://github.com/kanaka/mal/blob/master/process/guide.md) have been completed.
  
 ## Getting Started
 
