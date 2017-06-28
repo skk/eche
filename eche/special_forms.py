@@ -3,7 +3,7 @@ from funcy.seqs import partition
 from eche.eche_types import Symbol, List
 
 
-def def_exclamation_mark(ast):
+def def_exclamation_mark(ast, env=None):
     from eche.eval import eval_ast
 
     _, key, val = ast
