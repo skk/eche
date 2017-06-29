@@ -7,7 +7,10 @@ import eche.step2_eval as step
 
 
 @pytest.mark.parametrize("test_input,expected_value", [
+    ('(+ 1)', 1),
+    ('(+ 0)', 0),
     ('(+ 1 2)', 3),
+    ('(+ 1 2 3)', 6),
     ('(+ 2 3)', 5),
     ('(+ 2 (* 3 4))', 14),
 ])
@@ -92,3 +95,17 @@ def test_print(test_input):
 ])
 def test_rep(test_input):
     assert step.REP(test_input)
+
+
+@pytest.mark.parametrize("test_input,expected_value", [
+    ('(+ 1 2 3 4)', 10),
+    ('(* 1 2 3 4)', 24),
+    ('(- 1 2 3 4)', -8),
+    ('(/ 1 2 3 4)', 1/24),
+    ('(^ 2 3 4)', 4096),
+    ('(% 2 3 4)', 2),
+])
+def test_multi_arity_arithmetic_functions(test_input, expected_value):
+    env = get_default_env()
+    assert eval_ast_and_read_str(test_input, env, expected_value)
+
