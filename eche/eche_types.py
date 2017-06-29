@@ -139,6 +139,7 @@ class Node(object):
 
     rest = attrib(default=None)
     data = attrib(default=None, convert=node_data_convert)
+    env = attrib(default=None)
 
     @data.validator
     def check(self, attribute, value):
