@@ -28,4 +28,5 @@ def eval_ast_and_read_str(test_input: str, env: Env, expected_value: typing.Any)
         expected_value = Node(data=expected_value)
 
     actual = eval_ast(ast, env)
+    # print(f"test_input {test_input} actual {actual} ==? expected_value {expected_value}")
     return actual == expected_value

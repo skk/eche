@@ -1,4 +1,7 @@
 import typing
+import operator
+
+from functools import reduce
 
 from eche.eche_types import Node, Symbol, Env
 from eche.special_forms import special_forms
@@ -14,52 +17,37 @@ def get_value(node):
             return node
 
 
-def multiply(ast: typing.List[Node], env: Env) -> Node:
-    _, a, b = ast
-    a = get_value(a)
-    b = get_value(b)
-    data = a * b
+def arithmetic_fn_reduction(ast, arithmetic_fn, env, initializer=None):
+    ast = [get_value(a) for a in ast[1:]]
+    if initializer is None:
+        data = reduce(arithmetic_fn, ast)
+    else:
+        data = reduce(arithmetic_fn, ast, initializer)
     return Node(data=data, env=env)
+
+
+def multiply(ast: typing.List[Node], env: Env) -> Node:
+    return arithmetic_fn_reduction(ast, operator.mul, env, 1)
 
 
 def add(ast: typing.List[Node], env: Env) -> Node:
-    _, a, b = ast
-    a = get_value(a)
-    b = get_value(b)
-    data = a + b
-    return Node(data=data, env=env)
+    return arithmetic_fn_reduction(ast, operator.add, env, 0)
 
 
 def subtract(ast: typing.List[Node], env: Env) -> Node:
-    _, a, b = ast
-    a = get_value(a)
-    b = get_value(b)
-    data = a - b
-    return Node(data=data, env=env)
+    return arithmetic_fn_reduction(ast, operator.sub, env)
 
 
 def divide(ast: typing.List[Node], env: Env) -> Node:
-    _, a, b = ast
-    a = get_value(a)
-    b = get_value(b)
-    data = a / b
-    return Node(data=data, env=env)
+    return arithmetic_fn_reduction(ast, operator.truediv, env)
 
 
 def exp(ast: typing.List[Node], env: Env) -> Node:
-    _, a, b = ast
-    a = get_value(a)
-    b = get_value(b)
-    data = pow(a, b)
-    return Node(data=data, env=env)
+    return arithmetic_fn_reduction(ast, operator.pow, env)
 
 
 def mod(ast: typing.List[Node], env: Env) -> Node:
-    _, a, b = ast
-    a = get_value(a)
-    b = get_value(b)
-    data = a % b
-    return Node(data=data, env=env)
+    return arithmetic_fn_reduction(ast, operator.mod, env)
 
 
 def get_default_env():
