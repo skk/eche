@@ -126,10 +126,11 @@ class Vector(list, EcheTypeBase):
 
 
 def node_data_convert(val):
-    if isinstance(val, Node):
-        return val.data
-    else:
-        return val
+    return val
+    # if isinstance(val, Node):
+    #     return val.data
+    # else:
+    #     return val
 
 
 @attrs(frozen=False, cmp=False)
@@ -138,7 +139,7 @@ class Node(object):
         return hash(self.data)
 
     rest = attrib(default=None)
-    data = attrib(default=None, convert=node_data_convert)
+    data = attrib(default=None)
     env = attrib(default=None)
 
     @data.validator
@@ -156,6 +157,9 @@ class Node(object):
 
     def __str__(self) -> str:
         return str(self.data)
+
+    def __repr__(self) -> str:
+        return repr(self.data)
 
 END_NODE = Node()
 
@@ -188,8 +192,8 @@ class List(MutableSequence, EcheTypeBase):
         raise NotImplementedError
 
     # insert at beginning
-    def prepend(self, new_data: typing.Union[Node, EcheTypeBase]) -> None:
-        new_node = Node(data=node_data_convert(new_data))
+    def prepend(self, new_data: Node) -> None:
+        new_node = Node(data=new_data)
 
         if self.head is END_NODE or self.head is None:
             self.head = new_node
@@ -208,18 +212,18 @@ class List(MutableSequence, EcheTypeBase):
         pass
 
     def __getitem__(self, index):
-        vals = []
+        values = []
         for idx, node in enumerate(self):
             if isinstance(index, slice):
                 start = index.start
                 if idx >= start:
-                    vals.append(node)
+                    values.append(node)
             else:
                 if idx == index:
                     return node
 
-        if isinstance(index, slice) and len(vals) > 0:
-            return vals
+        if isinstance(index, slice) and len(values) > 0:
+            return values
 
         raise IndexError
 
@@ -233,6 +237,10 @@ class List(MutableSequence, EcheTypeBase):
         values = [val for val in self if val.data is not None]
         val = self.format_collection(self.prefix_char, values, self.suffix_char)
         return val
+
+    def __repr__(self):
+        nodes = [node for node in iter(self)]
+        return '[' + ', '.join(nodes) + ']'
 
     def __iter__(self):
         node = self.head
