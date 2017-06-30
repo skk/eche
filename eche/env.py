@@ -7,18 +7,8 @@ from eche.eche_types import Node, Symbol, Env
 from eche.special_forms import special_forms
 
 
-def get_value(node):
-    try:
-        return node.data.value
-    except AttributeError:
-        try:
-            return node.data
-        except AttributeError:
-            return node
-
-
 def arithmetic_fn_reduction(ast, arithmetic_fn, env, initializer=None):
-    ast = [get_value(a) for a in ast[1:]]
+    ast = [a.get_value() for a in iter(ast[1:])]
     if initializer is None:
         data = reduce(arithmetic_fn, ast)
     else:
