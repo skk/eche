@@ -28,10 +28,7 @@ def let_star(ast, env: Env):
 
     _, new_bindings, commands_in_new_env = ast
 
-    new_bindings = partition(2, list(new_bindings.data))
-
-    for binding in new_bindings:
-        key, val = binding
+    for key, val in partition(2, list(new_bindings.data)):
         inner_env[key] = val
 
     commands_in_new_env = eval_ast(commands_in_new_env, inner_env)

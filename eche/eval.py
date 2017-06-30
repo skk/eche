@@ -1,17 +1,4 @@
-import typing
-
-from eche.env import get_value
 from eche.eche_types import List, Symbol, Node, Vector
-
-
-def get_data(node: Node) -> typing.Any:
-    while isinstance(node, Node):
-        if isinstance(node.data, Node):
-            node = node.data
-        else:
-            break
-
-    return node
 
 
 def eval_ast(ast, env):
@@ -26,40 +13,34 @@ def eval_ast(ast, env):
         if len(ast) == 0:
             return ast
 
-        l = List(env=env)
+        new_ast = List(env=env)
 
         let_star_found = False
 
-        for node in ast:
-            if get_value(node) == 'let*':
+        for idx, node in enumerate(ast):
+            if node.get_value() == 'let*':
                 let_star_found = True
-
-            if get_value(node) == 'let*':
-                l.append(eval_ast(node, env))
+                new_ast.append(eval_ast(node, env))
             elif let_star_found:
-                l.append(node)
+                new_ast.append(node)
             else:
-                l.append(eval_ast(node, env))
-        ast = l
+                new_ast.append(eval_ast(node, env))
 
         try:
-            fn = ast[0].data
-        except (IndexError, AttributeError):
-            fn = None
-
-        if callable(fn):
-            l = List()
-            for node in ast:
-                l.append(get_data(node))
-            l.env = env
-            val = fn(l, env=env)
-            return val
+            fn = new_ast.head.data
+        except AttributeError:
+            return new_ast
         else:
-            return ast
+            if callable(fn):
+                try:
+                    val = fn(new_ast, env=env)
+                except TypeError as e:
+                    pass
+                else:
+                    return val
+            else:
+                return new_ast
     elif isinstance(ast, Symbol) and ast in env:
         return env[ast]
     else:
-        try:
-            return ast.value
-        except AttributeError:
-            return ast
+        return ast

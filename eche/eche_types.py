@@ -125,27 +125,35 @@ class Vector(list, EcheTypeBase):
         return val
 
 
-def node_data_convert(val):
-    return val
-    # if isinstance(val, Node):
-    #     return val.data
-    # else:
-    #     return val
-
-
 @attrs(frozen=False, cmp=False)
 class Node(object):
     def __hash__(self) -> int:
         return hash(self.data)
 
-    rest = attrib(default=None)
+    next = attrib(default=None)
     data = attrib(default=None)
     env = attrib(default=None)
 
+    def get_value(self):
+        if isinstance(self.data, EcheTypeBase):
+            return self.data.value
+        else:
+            return self.data
+
     @data.validator
     def check(self, attribute, value):
-        if attribute == 'data' and isinstance(value, List):
-            raise TypeError("data attrib can't be List")
+        if isinstance(value, Node):
+            self.data = value.data
+
+        if attribute == 'data':
+            if isinstance(value, List):
+                raise TypeError("data attrib can't be List")
+
+    def __iter__(self):
+        node = self.next
+        while next:
+            yield node.get_value()
+            node = node.next
 
     def __eq__(self, o) -> bool:
         try:
@@ -167,39 +175,32 @@ END_NODE = Node()
 @attrs(frozen=False, cmp=False)
 class List(MutableSequence, EcheTypeBase):
     env = attrib(default=Env())
-    head = attrib(default=END_NODE)
+    head = attrib(default=None)
     length = attrib(default=0)
 
     # TODO: delete at beginning
     # TODO: delete at middle
 
     # insert at end
-    def append(self, new_data) -> None:
-        new_node = Node(data=node_data_convert(new_data))
+    def append(self, data: EcheTypeBase) -> None:
+        if not self.head:
+            self.head = Node(data=data)
+            return
 
-        if self.head is END_NODE or self.head is None:
-            self.head = new_node
-        else:
-            last = self.head
-            while last.rest:
-                last = last.rest
-            last.rest = new_node
+        current = self.head
+        while current and current.next:
+            current = current.next
+        current.next = Node(data=data)
 
         self.length += 1
 
     # insert at middle
-    def insert_after(self, prev_node, new_data) -> None:
+    def insert_after(self, prev_node, data) -> None:
         raise NotImplementedError
 
     # insert at beginning
-    def prepend(self, new_data: Node) -> None:
-        new_node = Node(data=new_data)
-
-        if self.head is END_NODE or self.head is None:
-            self.head = new_node
-        else:
-            new_node.rest = self.head.rest
-            self.head = new_node
+    def prepend(self, data: EcheTypeBase) -> None:
+        self.head = Node(data=data, next=self.head)
         self.length += 1
 
     def __len__(self) -> int:
@@ -246,7 +247,7 @@ class List(MutableSequence, EcheTypeBase):
         node = self.head
         while node:
             yield node
-            node = node.rest
+            node = node.next
 
     def __contains__(self, value):
         for val in self:
