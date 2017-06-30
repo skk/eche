@@ -32,10 +32,11 @@ def REP(data, env=None):
 
 def repl():  # pragma: no cover
     env = get_default_env()
+    result = None
     while True:
         try:
-            line = getline(prompt_msg='user> ')
-            process_line(line, env)
+            line = getline(prompt_msg='user> ', previous_result=result)
+            result = process_line(line, env)
         except IOError as e:
             print("".join(traceback.format_exception(*sys.exc_info())))
             break
@@ -45,8 +46,12 @@ def repl():  # pragma: no cover
 
 def process_line(line, env):  # pragma: no cover
     try:
-        print(line)
-        print(REP(line, env))
+        r = REP(line, env)
+        if r is None:
+            return
+        else:
+            print(r)
+            return r
     except Blank:
         return
     except (SyntaxError, ValueError, TypeError) as e:

@@ -1,7 +1,6 @@
 import pytest
 
 from eche.tests import print_str_and_read_str_wrapper
-from eche.eche_types import List
 import eche.step0_repl as step
 
 

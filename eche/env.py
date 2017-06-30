@@ -40,6 +40,11 @@ def mod(ast: typing.List[Node], env: Env) -> Node:
     return arithmetic_fn_reduction(ast, operator.mod, env)
 
 
+def print_(ast: typing.List[Node], env: Env) -> None:
+    _, value, *rest = ast
+    print(value)
+
+
 def get_default_env():
     env = Env()
     env.data.update({
@@ -49,6 +54,7 @@ def get_default_env():
         Symbol('/'): divide,
         Symbol('^'): exp,
         Symbol('%'): mod,
+        Symbol('print'): print_,
     })
     env.data.update(special_forms)
     return env

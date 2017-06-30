@@ -4,6 +4,8 @@ from eche.env import get_default_env
 from eche.tests import eval_ast_and_verify_env, eval_ast_and_read_str
 from eche.eche_types import Node
 from eche.eche_types import List
+from eche.eval import eval_ast
+from eche.reader import read_str
 import eche.step3_env as step
 
 
@@ -53,3 +55,14 @@ def test_rep(test_input):
 ])
 def test_let_star(test_input, expected_value):
     assert eval_ast_and_read_str(test_input, get_default_env(), expected_value)
+
+
+@pytest.mark.parametrize("test_input,expected_output", [
+    ('(print 1)', '1'),
+    ('(print (* 2 2))', '4'),
+])
+def test_print_fn(capsys, test_input, expected_output):
+    env = get_default_env()
+    eval_ast(read_str(test_input), env)
+    out, err = capsys.readouterr()
+    assert out.strip() == expected_output
